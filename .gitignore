@@ -34,7 +34,14 @@ captures/
 
 # Intellij
 *.iml
-.idea/
+.idea
 
 # Keystore files
 *.jks
+
+# OSX files
+.DS_Store
+
+# Android Studio
+*.iml
+.idea
