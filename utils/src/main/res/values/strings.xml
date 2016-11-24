@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MyUtils</string>
+    <string name="test_toast">Toast test !</string>
 </resources>
