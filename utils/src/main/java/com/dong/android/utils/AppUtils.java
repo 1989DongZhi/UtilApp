@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 
+import com.dong.android.BuildConfig;
+
 /**
  * 作者：<Dr_dong>
  * 日期：2016/11/23.
@@ -34,5 +36,6 @@ public class AppUtils extends Application {
         instance = this;
         mAppContext = getApplicationContext();
         mainThreadHandler = new Handler();
+        LogUtils.setLogDebug(BuildConfig.DEBUG);
     }
 }
