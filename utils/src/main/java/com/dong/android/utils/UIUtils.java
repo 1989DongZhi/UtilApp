@@ -48,43 +48,54 @@ public class UIUtils {
 
     public static void showToast(final CharSequence body) {
         if (TextUtils.isEmpty(body)) return;
-        post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getContext(), body, Toast.LENGTH_SHORT).show();
-            }
-        });
+        post(() -> Toast.makeText(getContext(), body, Toast.LENGTH_SHORT).show());
     }
 
     public static void showToast(final int resId) {
         if (TextUtils.isEmpty(getContext().getResources().getText(resId))) return;
-        post(new Runnable() {
-            @Override
-            public void run() {
-                showToast(getContext().getResources().getText(resId));
-            }
-        });
+        post(() -> showToast(getContext().getResources().getText(resId)));
     }
 
     public static void showToastLong(final CharSequence body) {
         if (TextUtils.isEmpty(body)) return;
-        post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getContext(), body, Toast.LENGTH_LONG).show();
-            }
-        });
+        post(() -> Toast.makeText(getContext(), body, Toast.LENGTH_LONG).show());
     }
 
     public static void showToastLong(final int resId) {
         if (TextUtils.isEmpty(getContext().getResources().getText(resId))) return;
-        post(new Runnable() {
-            @Override
-            public void run() {
-                showToastLong(getContext().getResources().getText(resId));
-            }
-        });
+        post(() -> showToastLong(getContext().getResources().getText(resId)));
     }
 
+    /**
+     * dip 转换 px
+     */
+    public static int dip2px(int dip) {
+        final float scale = AppUtils.getRes().getDisplayMetrics().density;
+        return (int) (dip * scale + 0.5f);
+    }
+
+    /**
+     * dip 转换 px
+     */
+    public static int dip2px(float dip) {
+        final float scale = AppUtils.getRes().getDisplayMetrics().density;
+        return (int) (dip * scale + 0.5f);
+    }
+
+    /**
+     * px 转换 dip
+     */
+    public static int px2dip(int px) {
+        final float scale = AppUtils.getRes().getDisplayMetrics().density;
+        return (int) (px / scale + 0.5f);
+    }
+
+    /**
+     * px 转换 dip
+     */
+    public static int px2dip(float px) {
+        final float scale = AppUtils.getRes().getDisplayMetrics().density;
+        return (int) (px / scale + 0.5f);
+    }
 
 }

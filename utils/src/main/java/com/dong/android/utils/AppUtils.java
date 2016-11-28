@@ -2,6 +2,7 @@ package com.dong.android.utils;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Handler;
 
 import com.dong.android.BuildConfig;
@@ -16,10 +17,15 @@ public class AppUtils extends Application {
 
     private static Context mAppContext;
     private static Handler mainThreadHandler;
+    private static Resources resources;
     private AppUtils instance;
 
     public static Context getAppContext() {
         return mAppContext;
+    }
+
+    public static Resources getRes() {
+        return resources;
     }
 
     public static Handler getMainThreadHandler() {
@@ -35,6 +41,7 @@ public class AppUtils extends Application {
         super.onCreate();
         instance = this;
         mAppContext = getApplicationContext();
+        resources = mAppContext.getResources();
         mainThreadHandler = new Handler();
         LogUtils.setLogDebug(BuildConfig.DEBUG);
     }
