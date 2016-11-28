@@ -10,43 +10,60 @@ import android.util.Log;
 
 public class LogUtils {
 
+    /**
+     * 调试开关,日志控制,默认打开,发布时关闭
+     */
+    public static boolean DEBUG = true;
     private static String TAG = "===>" + Thread.currentThread().getStackTrace()[3].getClassName() +
             "===>" + Thread.currentThread().getStackTrace()[3].getLineNumber() + "===>";
 
+    public static void setLogDebug(boolean logDebug) {
+        DEBUG = logDebug;
+    }
+
     public static void e(String msg) {
-        e(TAG, msg);
+        if (DEBUG)
+            e(TAG, msg);
     }
 
     public static void e(String tag, String msg) {
-        Log.e(tag, msg);
+        if (DEBUG)
+            Log.e(tag, msg);
     }
 
     public static void w(String msg) {
-        w(TAG, msg);
+        if (DEBUG)
+            w(TAG, msg);
     }
 
     public static void w(String tag, String msg) {
-        Log.w(tag, msg);
+        if (DEBUG)
+            Log.w(tag, msg);
     }
 
     public static void i(String msg) {
-        i(TAG, msg);
+        if (DEBUG)
+            i(TAG, msg);
     }
 
     public static void i(String tag, String msg) {
-        Log.i(tag, msg);
+        if (DEBUG)
+            Log.i(tag, msg);
     }
 
     public static void d(String msg) {
-        d(TAG, msg);
+        if (DEBUG)
+            d(TAG, msg);
     }
 
     public static void d(String tag, String msg) {
-        Log.d(tag, msg);
+        if (DEBUG)
+            Log.d(tag, msg);
     }
 
     public static void v(String msg) {
-        v(TAG, msg);
+        if (DEBUG)
+            v(TAG, msg);
     }
 
     public static void v(String tag, String msg) {

@@ -328,4 +328,22 @@
     <color name="colorPrimaryDark">@color/blue_700</color>
     <color name="colorAccent">@color/red_500</color>
 
+    <!-- 加载图片时view显示颜色 -->
+    <color name="load_image_color0">@color/red_50</color>
+    <color name="load_image_color1">@color/pink_50</color>
+    <color name="load_image_color2">@color/purple_50</color>
+    <color name="load_image_color3">@color/deep_purple_50</color>
+    <color name="load_image_color4">@color/indigo_50</color>
+    <color name="load_image_color5">@color/blue_50</color>
+    <color name="load_image_color6">@color/light_blue_50</color>
+    <color name="load_image_color7">@color/cyan_50</color>
+    <color name="load_image_color8">@color/teal_50</color>
+    <color name="load_image_color9">@color/green_50</color>
+    <color name="load_image_color10">@color/light_green_50</color>
+    <color name="load_image_color11">@color/lime_50</color>
+    <color name="load_image_color12">@color/yellow_50</color>
+    <color name="load_image_color13">@color/amber_50</color>
+    <color name="load_image_color14">@color/orange_50</color>
+    <color name="load_image_color15">@color/deep_orange_50</color>
+
 </resources>
