@@ -1,6 +1,6 @@
 package com.dong.android.utils.files;
 
-import com.dong.android.utils.AppUtils;
+import com.dong.android.app.AppManager;
 
 /**
  * 作者：<Dr_dong>
@@ -17,6 +17,6 @@ public class ResUtils {
      * @return
      */
     public static int getDimenSize(int resId) {
-        return AppUtils.getRes().getDimensionPixelSize(resId);
+        return AppManager.getRes().getDimensionPixelSize(resId);
     }
 }

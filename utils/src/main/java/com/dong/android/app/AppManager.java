@@ -1,4 +1,4 @@
-package com.dong.android.utils;
+package com.dong.android.app;
 
 import android.app.Application;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.os.Handler;
 
 import com.dong.android.BuildConfig;
+import com.dong.android.utils.LogUtils;
 
 /**
  * 作者：<Dr_dong>
@@ -13,12 +14,12 @@ import com.dong.android.BuildConfig;
  * 描述：应用全局工具类
  */
 
-public class AppUtils extends Application {
+public class AppManager extends Application {
 
     private static Context mAppContext;
     private static Handler mainThreadHandler;
     private static Resources resources;
-    private AppUtils instance;
+    private AppManager instance;
 
     public static Context getAppContext() {
         return mAppContext;
@@ -32,7 +33,7 @@ public class AppUtils extends Application {
         return mainThreadHandler;
     }
 
-    public AppUtils getInstance() {
+    public AppManager getInstance() {
         return instance;
     }
 

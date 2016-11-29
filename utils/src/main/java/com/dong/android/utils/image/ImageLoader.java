@@ -8,7 +8,7 @@ import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.Transformation;
 import com.dong.android.R;
-import com.dong.android.utils.AppUtils;
+import com.dong.android.app.AppManager;
 
 /**
  * 作者：<Dr_dong>
@@ -39,9 +39,9 @@ public class ImageLoader {
                                @TransformationUtils.TRANSFORMATE_TYPE int type) {
         DrawableTypeRequest request;
         if (resId != 0 && url == null) {
-            request = Glide.with(AppUtils.getAppContext()).load(resId);
+            request = Glide.with(AppManager.getAppContext()).load(resId);
         } else if (resId == 0 && url != null) {
-            request = Glide.with(AppUtils.getAppContext()).load(url);
+            request = Glide.with(AppManager.getAppContext()).load(url);
         } else {
             return;
         }
@@ -62,9 +62,9 @@ public class ImageLoader {
                                Transformation<Bitmap>[] transformations) {
         DrawableTypeRequest request;
         if (resId != 0 && url == null) {
-            request = Glide.with(AppUtils.getAppContext()).load(resId);
+            request = Glide.with(AppManager.getAppContext()).load(resId);
         } else if (resId == 0 && url != null) {
-            request = Glide.with(AppUtils.getAppContext()).load(url);
+            request = Glide.with(AppManager.getAppContext()).load(url);
         } else {
             return;
         }

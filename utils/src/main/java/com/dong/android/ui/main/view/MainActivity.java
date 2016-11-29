@@ -1,21 +1,21 @@
-package com.dong.android.view;
+package com.dong.android.ui.main.view;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import com.dong.android.R;
+import com.dong.android.base.view.BaseActivity;
+import com.dong.android.ui.main.presenter.MainPresenter;
 import com.dong.android.utils.image.TransformationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity<MainPresenter> implements MainView {
 
 
     @BindView(R.id.text1)
@@ -24,10 +24,22 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+    protected int getRootView() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected MainPresenter createPresenter() {
+        return null;
+    }
+
+    @Override
+    protected void setListener() {
+
+    }
+
+    @Override
+    protected void initData(Bundle savedInstanceState) {
         test();
     }
 

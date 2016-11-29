@@ -1,4 +1,4 @@
-package com.dong.android.view;
+package com.dong.android.ui.main.view;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

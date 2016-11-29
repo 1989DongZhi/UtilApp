@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.dong.android.app.AppManager;
+
 /**
  * 作者：<Dr_dong>
  * 日期：2016/11/23.
@@ -15,14 +17,14 @@ import android.widget.Toast;
 public class UIUtils {
 
     public static Context getContext() {
-        return AppUtils.getAppContext();
+        return AppManager.getAppContext();
     }
 
     /**
      * 获取主线程的handler
      */
     public static Handler getHandler() {
-        return AppUtils.getMainThreadHandler();
+        return AppManager.getMainThreadHandler();
     }
 
     /**
@@ -70,7 +72,7 @@ public class UIUtils {
      * dip 转换 px
      */
     public static int dip2px(int dip) {
-        final float scale = AppUtils.getRes().getDisplayMetrics().density;
+        final float scale = AppManager.getRes().getDisplayMetrics().density;
         return (int) (dip * scale + 0.5f);
     }
 
@@ -78,7 +80,7 @@ public class UIUtils {
      * dip 转换 px
      */
     public static int dip2px(float dip) {
-        final float scale = AppUtils.getRes().getDisplayMetrics().density;
+        final float scale = AppManager.getRes().getDisplayMetrics().density;
         return (int) (dip * scale + 0.5f);
     }
 
@@ -86,7 +88,7 @@ public class UIUtils {
      * px 转换 dip
      */
     public static int px2dip(int px) {
-        final float scale = AppUtils.getRes().getDisplayMetrics().density;
+        final float scale = AppManager.getRes().getDisplayMetrics().density;
         return (int) (px / scale + 0.5f);
     }
 
@@ -94,7 +96,7 @@ public class UIUtils {
      * px 转换 dip
      */
     public static int px2dip(float px) {
-        final float scale = AppUtils.getRes().getDisplayMetrics().density;
+        final float scale = AppManager.getRes().getDisplayMetrics().density;
         return (int) (px / scale + 0.5f);
     }
 
