@@ -1,7 +1,15 @@
 package com.dong.android.utils;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import com.dong.android.utils.files.FileUtils;
+
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 作者：<Dr_dong>
@@ -11,50 +19,59 @@ import android.graphics.BitmapFactory;
 
 public class BitmapUtils {
 
-    /**
-     * 对图片进行二次采样，生成缩略图。放置加载过大图片出现内存溢出
-     */
-    public static Bitmap createThumbnail(byte[] data, int newWidth,
-                                         int newHeight) {
+    public static Bitmap getFitSampleBitmap(byte[] data, int newWidth, int newHeight) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeByteArray(data, 0, data.length, options);
-        int oldWidth = options.outWidth;
-        int oldHeight = options.outHeight;
-
-        int ratioWidth = 0;
-        int ratioHeight = 0;
-
-        if (newWidth != 0 && newHeight == 0) {
-            ratioWidth = oldWidth / newWidth;
-            options.inSampleSize = ratioWidth;
-        } else if (newWidth == 0 && newHeight != 0) {
-            ratioHeight = oldHeight / newHeight;
-            options.inSampleSize = ratioHeight;
-        }
+        options.inSampleSize = getFitInSampleSize(newWidth, newHeight, options);
         options.inPreferredConfig = Bitmap.Config.ALPHA_8;
         options.inJustDecodeBounds = false;
-        Bitmap bm = BitmapFactory
-                .decodeByteArray(data, 0, data.length, options);
-        return bm;
+        return BitmapFactory.decodeByteArray(data, 0, data.length, options);
     }
 
     /**
-     * 对图片进行二次采样，生成缩略图。放置加载过大图片出现内存溢出
+     * BitmapFactory.decodeFileDescriptor 比 BitmapFactory.decodeFile 更节省内存
      */
-    private Bitmap createThumbnail(String filePath, int newWidth, int newHeight) {
+    public static Bitmap getFitSampleBitmap(String filePath, int newWidth, int newHeight)
+            throws IOException {
+        return getFitSampleBitmap(new FileInputStream(filePath), newWidth, newHeight);
+    }
+
+    public static Bitmap getFitSampleBitmap(Resources resources, int resId, int width, int height) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(filePath, options);
-        int originalWidth = options.outWidth;
-        int originalHeight = options.outHeight;
-
-        int ratioWidth = originalWidth / newWidth;
-        int ratioHeight = originalHeight / newHeight;
-
-        options.inSampleSize = ratioHeight > ratioWidth ? ratioHeight
-                : ratioWidth;
+        BitmapFactory.decodeResource(resources, resId, options);
+        options.inSampleSize = getFitInSampleSize(width, height, options);
         options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeFile(filePath, options);
+        return BitmapFactory.decodeResource(resources, resId, options);
     }
+
+    public static Bitmap getFitSampleBitmap(InputStream inputStream, String catchFilePath, int
+            width, int height) throws Exception {
+        return getFitSampleBitmap(FileUtils.putStreamToFile(catchFilePath, inputStream), width,
+                height);
+    }
+
+    public static Bitmap getFitSampleBitmap(FileInputStream fileInStream, int width, int height)
+            throws IOException {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        FileDescriptor fd = fileInStream.getFD();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFileDescriptor(fd, null, options);
+        options.inSampleSize = getFitInSampleSize(width, height, options);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFileDescriptor(fd, null, options);
+    }
+
+    public static int getFitInSampleSize(int reqWidth, int reqHeight, BitmapFactory.Options
+            options) {
+        int inSampleSize = 1;
+        if (options.outWidth > reqWidth || options.outHeight > reqHeight) {
+            int widthRatio = Math.round((float) options.outWidth / (float) reqWidth);
+            int heightRatio = Math.round((float) options.outHeight / (float) reqHeight);
+            inSampleSize = Math.min(widthRatio, heightRatio);
+        }
+        return inSampleSize;
+    }
+
 }

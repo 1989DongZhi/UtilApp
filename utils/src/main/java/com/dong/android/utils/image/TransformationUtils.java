@@ -9,7 +9,7 @@ import android.support.annotation.IntDef;
 import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.dong.android.R;
-import com.dong.android.utils.AppUtils;
+import com.dong.android.app.AppManager;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -74,7 +74,7 @@ public abstract class TransformationUtils {
     }
 
     public static Transformation<Bitmap>[] bitmapTransform(@TRANSFORMATE_TYPE Integer type) {
-        Context mContext = AppUtils.getAppContext();
+        Context mContext = AppManager.getAppContext();
         switch (type) {
             case Original:
                 return null;

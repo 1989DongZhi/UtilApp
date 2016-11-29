@@ -1,4 +1,4 @@
-package com.dong.android.utils.files;
+package com.dong.android.utils.cache;
 
 import android.content.Context;
 import android.os.Environment;
