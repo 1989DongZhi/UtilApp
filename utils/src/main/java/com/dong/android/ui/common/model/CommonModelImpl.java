@@ -1,4 +1,4 @@
-package com.dong.android.ui.main.model;
+package com.dong.android.ui.common.model;
 
 import com.dong.android.base.model.BaseModel;
 
@@ -8,10 +8,10 @@ import com.dong.android.base.model.BaseModel;
  * 描述：
  */
 
-public class MainModelImpl extends BaseModel<MainModel> {
+public class CommonModelImpl extends BaseModel<CommonModel> {
 
     @Override
-    protected MainModel createEngine() {
+    protected CommonModel createEngine() {
         return null;
     }
 }
