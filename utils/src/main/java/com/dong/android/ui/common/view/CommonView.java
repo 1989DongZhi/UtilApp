@@ -1,4 +1,4 @@
-package com.dong.android.ui.main.view;
+package com.dong.android.ui.common.view;
 
 import com.dong.android.base.view.BaseView;
 
@@ -8,5 +8,5 @@ import com.dong.android.base.view.BaseView;
  * 描述：
  */
 
-public interface MainView extends BaseView {
+public interface CommonView extends BaseView {
 }

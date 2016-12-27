@@ -14,7 +14,7 @@ import java.io.InputStream;
 /**
  * 作者：<Dr_dong>
  * 日期：2016/11/26.
- * 描述：
+ * 描述：利用采样率控制bitmap 减少内存消耗
  */
 
 public class BitmapUtils {

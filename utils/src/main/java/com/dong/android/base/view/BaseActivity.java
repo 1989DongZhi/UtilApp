@@ -3,12 +3,14 @@ package com.dong.android.base.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
 import com.dong.android.base.presenter.BasePresenter;
-import com.dong.android.ui.main.view.MainActivity;
+import com.dong.android.ui.test.GlideLoadImageActivity;
 import com.dong.android.utils.ActivitiesManager;
 import com.dong.android.utils.UIUtils;
+import com.dong.android.utils.permissionutils.PermissionUtils;
 import com.dong.android.widget.MyProgressDialog;
 
 import butterknife.ButterKnife;
@@ -66,6 +68,14 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         }
         super.onDestroy();
         ActivitiesManager.removeActivity(this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[]
+            grantResults) {
+        PermissionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     /**
@@ -185,8 +195,8 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
      * 如果应用未启动则启动应用
      */
     protected void startApp() {
-        if (!ActivitiesManager.isActivityExist(MainActivity.class)) {
-            Intent intent = new Intent(this, MainActivity.class);
+        if (!ActivitiesManager.isActivityExist(GlideLoadImageActivity.class)) {
+            Intent intent = new Intent(this, GlideLoadImageActivity.class);
             startActivity(intent);
         }
     }
