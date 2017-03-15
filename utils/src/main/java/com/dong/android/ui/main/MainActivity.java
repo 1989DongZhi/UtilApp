@@ -27,6 +27,10 @@ public class MainActivity extends ListActivity {
         sampleData.add(new SampleData("Test", TestActivity.class.getName()));
         sampleData.add(new SampleData("Glide Load Image", GlideLoadImageActivity.class.getName()));
         sampleData.add(new SampleData("SVG Tint", SVGTintActivity.class.getName()));
+        addTestData();
         return sampleData;
+    }
+
+    private void addTestData() {
     }
 }
