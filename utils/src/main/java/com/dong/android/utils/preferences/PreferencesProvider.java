@@ -4,6 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * @author <dr_dong>
@@ -19,11 +23,21 @@ public class PreferencesProvider extends BasePreferencesProvider {
     public static final String METHOD_PUT_BOOLEAN = "put_boolean";
     // getBoolean()方法标识
     public static final String METHOD_GET_BOOLEAN = "get_boolean";
-
+    // putBoolean()方法标识
+    public static final String METHOD_PUT_INT = "put_int";
+    // getBoolean()方法标识
+    public static final String METHOD_GET_INT = "get_int";
+    // putBoolean()方法标识
+    public static final String METHOD_PUT_FLOAT = "put_float";
+    // getBoolean()方法标识
+    public static final String METHOD_GET_FLOAT = "get_float";
+    // putBoolean()方法标识
+    public static final String METHOD_PUT_LONG = "put_long";
+    // getBoolean()方法标识
+    public static final String METHOD_GET_LONG = "get_long";
     public static final String EXTRA_KEY = "key";
     public static final String EXTRA_VALUE = "value";
     public static final String EXTRA_DEFAULT_VALUE = "default_value";
-
     private SharedPreferences mPreferences;
 
     @Override
@@ -35,45 +49,65 @@ public class PreferencesProvider extends BasePreferencesProvider {
 
     @Nullable
     @Override
-    public Bundle call(String method, String arg, Bundle extras) {
+    public Bundle call(@METHOD_TYPE String method, String arg, Bundle extras) {
         // 用于将数据返回给调用方，例如getString()、getBoolean()
         Bundle replyData = null;
+        String key = extras.getString(EXTRA_KEY);
         switch (method) {
-            case METHOD_PUT_STRING: {
-                String key = extras.getString(EXTRA_KEY);
-                String value = extras.getString(EXTRA_VALUE);
-                // 将值存起来 - putString()
-                mPreferences.edit().putString(key, value).commit();
+            case METHOD_PUT_STRING:
+                mPreferences.edit().putString(key, extras.getString(EXTRA_VALUE)).apply();
                 break;
-            }
-            case METHOD_GET_STRING: {
-                String key = extras.getString(EXTRA_KEY);
-                String defValue = extras.getString(EXTRA_DEFAULT_VALUE);
-                // 获取到的值 - getString()
-                String value = mPreferences.getString(key, defValue);
+            case METHOD_GET_STRING:
                 replyData = new Bundle();
-                // 将获取到的值放进Bundle
-                replyData.putString(EXTRA_VALUE, value);
+                replyData.putString(EXTRA_VALUE,
+                        mPreferences.getString(key, extras.getString(EXTRA_DEFAULT_VALUE)));
                 break;
-            }
-            case METHOD_PUT_BOOLEAN: {
-                String key = extras.getString(EXTRA_KEY);
-                boolean value = extras.getBoolean(EXTRA_VALUE);
-                // 将值存起来 - putBoolean()
-                mPreferences.edit().putBoolean(key, value).commit();
+
+            case METHOD_PUT_BOOLEAN:
+                mPreferences.edit().putBoolean(key, extras.getBoolean(EXTRA_VALUE)).apply();
                 break;
-            }
-            case METHOD_GET_BOOLEAN: {
-                String key = extras.getString(EXTRA_KEY);
-                boolean defValue = extras.getBoolean(EXTRA_DEFAULT_VALUE);
-                // 获取到的值 - getBoolean()
-                boolean value = mPreferences.getBoolean(key, defValue);
+            case METHOD_GET_BOOLEAN:
                 replyData = new Bundle();
-                replyData.putBoolean(EXTRA_VALUE, value);
+                replyData.putBoolean(EXTRA_VALUE,
+                        mPreferences.getBoolean(key, extras.getBoolean(EXTRA_DEFAULT_VALUE)));
                 break;
-            }
+
+            case METHOD_PUT_INT:
+                mPreferences.edit().putInt(key, extras.getInt(EXTRA_VALUE)).apply();
+                break;
+            case METHOD_GET_INT:
+                replyData = new Bundle();
+                replyData.putInt(EXTRA_VALUE,
+                        mPreferences.getInt(key, extras.getInt(EXTRA_DEFAULT_VALUE, 0)));
+                break;
+
+            case METHOD_PUT_FLOAT:
+                mPreferences.edit().putFloat(key, extras.getFloat(EXTRA_VALUE)).apply();
+                break;
+            case METHOD_GET_FLOAT:
+                replyData = new Bundle();
+                replyData.putFloat(EXTRA_VALUE,
+                        mPreferences.getFloat(key, extras.getFloat(EXTRA_DEFAULT_VALUE)));
+                break;
+
+            case METHOD_PUT_LONG:
+                mPreferences.edit().putLong(key, extras.getLong(EXTRA_VALUE)).apply();
+                break;
+            case METHOD_GET_LONG:
+                replyData = new Bundle();
+                replyData.putLong(EXTRA_VALUE,
+                        mPreferences.getLong(key, extras.getLong(EXTRA_DEFAULT_VALUE)));
+                break;
+
         }
         // 将获取到的值返回给调用方，若为put操作，replyData则为null
         return replyData;
+    }
+
+    @StringDef({METHOD_PUT_STRING, METHOD_GET_STRING, METHOD_PUT_BOOLEAN, METHOD_GET_BOOLEAN,
+            METHOD_PUT_INT, METHOD_GET_INT, METHOD_PUT_FLOAT, METHOD_GET_FLOAT,
+            METHOD_PUT_LONG, METHOD_GET_LONG})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface METHOD_TYPE {
     }
 }

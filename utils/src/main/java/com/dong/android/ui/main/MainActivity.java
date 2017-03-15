@@ -6,6 +6,7 @@ import com.dong.android.ui.listsample.SampleData;
 import com.dong.android.ui.test.GlideLoadImageActivity;
 import com.dong.android.ui.test.SVGTintActivity;
 import com.dong.android.ui.test.TestActivity;
+import com.dong.android.utils.preferences.PreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,5 +33,6 @@ public class MainActivity extends ListActivity {
     }
 
     private void addTestData() {
+        PreferencesUtils.putString(mContext, "test_sp", "这是一条sp测试");
     }
 }
