@@ -346,4 +346,6 @@
     <color name="load_image_color14">@color/orange_50</color>
     <color name="load_image_color15">@color/deep_orange_50</color>
 
+    <color name="black_overlay">#66000000</color>
+
 </resources>
