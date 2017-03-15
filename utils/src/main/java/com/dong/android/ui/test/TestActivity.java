@@ -5,6 +5,8 @@ import android.os.Bundle;
 import com.dong.android.R;
 import com.dong.android.base.presenter.BasePresenter;
 import com.dong.android.base.view.BaseActivity;
+import com.dong.android.utils.UIUtils;
+import com.dong.android.utils.preferences.PreferencesUtils;
 
 public class TestActivity extends BaseActivity {
     public static final String TAG = TestActivity.class.getSimpleName();
@@ -26,8 +28,7 @@ public class TestActivity extends BaseActivity {
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-
-
+        UIUtils.showToast(PreferencesUtils.getString(mContext, "test_sp", "默认"));
     }
 
 }

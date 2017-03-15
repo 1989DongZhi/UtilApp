@@ -108,6 +108,11 @@
             android:name=".ui.gnative.TestBasic2Activity"
             android:label="@string/title_activity_test_basic2"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <provider
+            android:name=".utils.preferences.PreferencesProvider"
+            android:authorities="com.dong.android.sp" />
+
     </application>
 
 </manifest>

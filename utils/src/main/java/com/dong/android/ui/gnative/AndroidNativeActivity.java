@@ -2,6 +2,8 @@ package com.dong.android.ui.gnative;
 
 import com.dong.android.ui.listsample.ListActivity;
 import com.dong.android.ui.listsample.SampleData;
+import com.dong.android.utils.UIUtils;
+import com.dong.android.utils.preferences.PreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,7 @@ public class AndroidNativeActivity extends ListActivity {
         sampleData.add(new SampleData("Tabs", TestTabsActivity.class.getName()));
         sampleData.add(new SampleData("TabSpinner", TestTabSpinnerActivity.class.getName()));
         sampleData.add(new SampleData("TabSwipe", TestTabSwipeActivity.class.getName()));
+        UIUtils.showToast(PreferencesUtils.getString(mContext, "test_ss", "默认"));
         return sampleData;
     }
 }
