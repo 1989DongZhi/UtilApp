@@ -211,5 +211,5 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_test_basic">TestBasicActivity</string>
-    <string name="title_activity_tset_basic2">TsetBasic2Activity</string>
+    <string name="title_activity_test_basic2">TestBasic2Activity</string>
 </resources>
