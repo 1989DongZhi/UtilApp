@@ -10,7 +10,7 @@ import com.dong.android.base.presenter.BasePresenter;
 import com.dong.android.ui.test.GlideLoadImageActivity;
 import com.dong.android.utils.ActivitiesManager;
 import com.dong.android.utils.UIUtils;
-import com.dong.android.utils.permissionutils.PermissionUtils;
+import com.dong.android.utils.permission.PermissionUtils;
 import com.dong.android.widget.MyProgressDialog;
 
 import butterknife.ButterKnife;
