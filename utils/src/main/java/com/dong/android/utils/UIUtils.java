@@ -2,7 +2,8 @@ package com.dong.android.utils;
 
 import android.content.Context;
 import android.os.Handler;
-import android.text.TextUtils;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.widget.Toast;
 
 import com.dong.android.app.AppManager;
@@ -16,6 +17,10 @@ import com.dong.android.app.AppManager;
 
 public class UIUtils {
 
+    private UIUtils() {
+        throw new IllegalAccessError("UIUtils class");
+    }
+
     public static Context getContext() {
         return AppManager.getAppContext();
     }
@@ -23,14 +28,14 @@ public class UIUtils {
     /**
      * 获取主线程的handler
      */
-    public static Handler getHandler() {
+    private static Handler getHandler() {
         return AppManager.getMainThreadHandler();
     }
 
     /**
      * 在主线程执行runnable
      */
-    public static boolean post(Runnable runnable) {
+    private static boolean post(Runnable runnable) {
         return getHandler().post(runnable);
     }
 
@@ -48,23 +53,19 @@ public class UIUtils {
         getHandler().removeCallbacks(runnable);
     }
 
-    public static void showToast(final CharSequence body) {
-        if (TextUtils.isEmpty(body)) return;
+    public static void showToast(@NonNull CharSequence body) {
         post(() -> Toast.makeText(getContext(), body, Toast.LENGTH_SHORT).show());
     }
 
-    public static void showToast(final int resId) {
-        if (TextUtils.isEmpty(getContext().getResources().getText(resId))) return;
+    public static void showToast(@StringRes int resId) {
         post(() -> showToast(getContext().getResources().getText(resId)));
     }
 
-    public static void showToastLong(final CharSequence body) {
-        if (TextUtils.isEmpty(body)) return;
+    public static void showToastLong(@NonNull CharSequence body) {
         post(() -> Toast.makeText(getContext(), body, Toast.LENGTH_LONG).show());
     }
 
-    public static void showToastLong(final int resId) {
-        if (TextUtils.isEmpty(getContext().getResources().getText(resId))) return;
+    public static void showToastLong(@StringRes int resId) {
         post(() -> showToastLong(getContext().getResources().getText(resId)));
     }
 
