@@ -16,6 +16,7 @@ import com.dong.android.utils.LogUtils;
 
 public class AppManager extends Application {
 
+    public static String PACKAGE_NAME;
     private static Context mAppContext;
     private static Handler mainThreadHandler;
     private static Resources resources;
@@ -45,5 +46,6 @@ public class AppManager extends Application {
         resources = mAppContext.getResources();
         mainThreadHandler = new Handler();
         LogUtils.setLogDebug(BuildConfig.DEBUG);
+        PACKAGE_NAME = getPackageName();
     }
 }
