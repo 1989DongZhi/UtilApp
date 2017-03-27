@@ -39,20 +39,15 @@ public abstract class BaseDialogFragment<P extends BasePresenter> extends Dialog
         if (null != mPresenter) {
             mPresenter.attachView(this);
         }
-        restoreFragmentState(savedInstanceState);
         initData();
         setListener();
     }
 
     @Override
     public void onDestroyView() {
-        try {
-            if (loadingDia != null)
-                loadingDia.dismiss();
-            loadingDia = null;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        if (loadingDia != null)
+            loadingDia.dismiss();
+        loadingDia = null;
         if (null != mPresenter) {
             mPresenter.detachView();
             mPresenter = null;
@@ -73,16 +68,12 @@ public abstract class BaseDialogFragment<P extends BasePresenter> extends Dialog
      * 显示加载进度对话框
      */
     public void showLoading(String info) {
-        try {
-            if (loadingDia == null) {
-                loadingDia = new MyProgressDialog(mActivity);
-            }
-            loadingDia.setTextInfo(info);
-            if (!loadingDia.isShowing()) {
-                loadingDia.show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (loadingDia == null) {
+            loadingDia = new MyProgressDialog(mActivity);
+        }
+        loadingDia.setTextInfo(info);
+        if (!loadingDia.isShowing()) {
+            loadingDia.show();
         }
     }
 
@@ -92,13 +83,11 @@ public abstract class BaseDialogFragment<P extends BasePresenter> extends Dialog
 
     @Override
     public void dismissLoading() {
-        try {
-            if (mActivity.isFinishing()) return;
-            if (loadingDia != null && loadingDia.isShowing())
-                loadingDia.dismiss();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (mActivity.isFinishing()) {
+            return;
         }
+        if (loadingDia != null && loadingDia.isShowing())
+            loadingDia.dismiss();
     }
 
     @Override
@@ -120,15 +109,11 @@ public abstract class BaseDialogFragment<P extends BasePresenter> extends Dialog
 
     /**
      * 获取布局id
-     *
-     * @return
      */
     protected abstract int getRootView();
 
     /**
      * 创建View对应的Presenter
-     *
-     * @return
      */
     protected abstract P createPresenter();
 
@@ -143,18 +128,7 @@ public abstract class BaseDialogFragment<P extends BasePresenter> extends Dialog
     protected abstract void initData();
 
     /**
-     * 恢复viewState
-     *
-     * @param savedInstanceState
-     */
-    protected void restoreFragmentState(Bundle savedInstanceState) {
-
-    }
-
-    /**
      * 跳转到其他Activity
-     *
-     * @param activity
      */
     protected void goActivity(Class<?> activity) {
         Intent intent = new Intent(mActivity, activity);

@@ -36,8 +36,9 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         mPresenter = createPresenter();
-        if (null != mPresenter) mPresenter.attachView(this);
-        restoreFragmentState(savedInstanceState);
+        if (null != mPresenter) {
+            mPresenter.attachView(this);
+        }
         initData();
         setListener();
         afterLoad();
@@ -53,12 +54,9 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
 
     @Override
     public void onDestroyView() {
-        try {
-            if (loadingDia != null)
-                loadingDia.dismiss();
-            loadingDia = null;
-        } catch (Exception e) {
-        }
+        if (loadingDia != null)
+            loadingDia.dismiss();
+        loadingDia = null;
         if (null != mPresenter) {
             mPresenter.detachView();
             mPresenter = null;
@@ -80,16 +78,12 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
      * 显示加载进度对话框
      */
     public void showLoading(String info) {
-        try {
-            if (loadingDia == null) {
-                loadingDia = new MyProgressDialog(mActivity);
-            }
-            loadingDia.setTextInfo(info);
-            if (!loadingDia.isShowing()) {
-                loadingDia.show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (loadingDia == null) {
+            loadingDia = new MyProgressDialog(mActivity);
+        }
+        loadingDia.setTextInfo(info);
+        if (!loadingDia.isShowing()) {
+            loadingDia.show();
         }
     }
 
@@ -99,13 +93,11 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
 
     @Override
     public void dismissLoading() {
-        try {
-            if (mActivity.isFinishing()) return;
-            if (loadingDia != null && loadingDia.isShowing())
-                loadingDia.dismiss();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (mActivity.isFinishing()) {
+            return;
         }
+        if (loadingDia != null && loadingDia.isShowing())
+            loadingDia.dismiss();
     }
 
     @Override
@@ -148,15 +140,6 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
      * 设置数据
      */
     protected abstract void initData();
-
-    /**
-     * 恢复viewState
-     *
-     * @param savedInstanceState
-     */
-    protected void restoreFragmentState(Bundle savedInstanceState) {
-
-    }
 
     /**
      * 跳转到其他Activity
