@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
 import com.dong.android.base.presenter.BasePresenter;
-import com.dong.android.ui.test.GlideLoadImageActivity;
+import com.dong.android.ui.main.MainActivity;
 import com.dong.android.utils.ActivitiesManager;
 import com.dong.android.utils.UIUtils;
 import com.dong.android.utils.permission.PermissionUtils;
@@ -39,29 +39,18 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
             ButterKnife.bind(this);
         }
         mPresenter = createPresenter();
-        if (null != mPresenter) mPresenter.attachView(this);
+        if (null != mPresenter) {
+            mPresenter.attachView(this);
+        }
         initData(savedInstanceState);
         setListener();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
     protected void onDestroy() {
-        try {
-            if (loadingDia != null)
-                loadingDia.dismiss();
-            loadingDia = null;
-        } catch (Exception e) {
-        }
+        if (loadingDia != null)
+            loadingDia.dismiss();
+        loadingDia = null;
         if (null != mPresenter) {
             mPresenter.detachView();
             mPresenter = null;
@@ -73,7 +62,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[]
-            grantResults) {
+                                                   grantResults) {
         PermissionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults);
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
@@ -87,15 +76,11 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
 
     /**
      * 获取布局id
-     *
-     * @return
      */
     protected abstract int getRootView();
 
     /**
      * 创建View对应的Presenter
-     *
-     * @return
      */
     protected abstract P createPresenter();
 
@@ -114,6 +99,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     /**
      * 显示加载进度对话框
      */
+    @Override
     public void showLoading() {
         showLoading("加载中…");
     }
@@ -123,16 +109,12 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
      * 显示加载进度对话框
      */
     public void showLoading(String info) {
-        try {
-            if (loadingDia == null) {
-                loadingDia = new MyProgressDialog(this);
-            }
-            loadingDia.setTextInfo(info);
-            if (!loadingDia.isShowing()) {
-                loadingDia.show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (loadingDia == null) {
+            loadingDia = new MyProgressDialog(this);
+        }
+        loadingDia.setTextInfo(info);
+        if (!loadingDia.isShowing()) {
+            loadingDia.show();
         }
     }
 
@@ -141,14 +123,10 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
      */
     @Override
     public void dismissLoading() {
-        try {
-            if (this.isFinishing())
-                return;
-            if (loadingDia != null && loadingDia.isShowing())
-                loadingDia.dismiss();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        if (this.isFinishing())
+            return;
+        if (loadingDia != null && loadingDia.isShowing())
+            loadingDia.dismiss();
     }
 
     @Override
@@ -163,8 +141,6 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
 
     /**
      * 跳转到其他Activity并且finish当前Activity
-     *
-     * @param act
      */
     protected void goActivityAndFinish(final Class<?> act) {
         Intent intent = new Intent(this, act);
@@ -174,8 +150,6 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
 
     /**
      * 跳转到其他Activity但不finish当前的Activity
-     *
-     * @param act
      */
     protected void goActivity(final Class<?> act) {
         Intent intent = new Intent(this, act);
@@ -184,8 +158,6 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
 
     /**
      * 跳转到其他Activity但不finish当前的Activity
-     *
-     * @param intent
      */
     protected void goActivity(final Intent intent) {
         startActivity(intent);
@@ -195,20 +167,10 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
      * 如果应用未启动则启动应用
      */
     protected void startApp() {
-        if (!ActivitiesManager.isActivityExist(GlideLoadImageActivity.class)) {
-            Intent intent = new Intent(this, GlideLoadImageActivity.class);
+        if (!ActivitiesManager.isActivityExist(MainActivity.class)) {
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
-    }
-
-    /**
-     * 防止Activity销毁时保存Fragment状态
-     * 解决被恢复的Fragment中getActivity为null的问题
-     *
-     * @param outState
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
     }
 
 }

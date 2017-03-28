@@ -19,14 +19,11 @@ public class AndroidNativeActivity extends ListActivity {
     @Override
     protected List<SampleData> sampleData() {
         final List<SampleData> sampleData = new ArrayList<>();
-        sampleData.add(new SampleData("AdBanner", TestAdBannerActivity.class.getName()));
-        sampleData.add(new SampleData("AdInterstitial", TestAdInterstitialActivity.class.getName()));
         sampleData.add(new SampleData("Basic", TestBasicActivity.class.getName()));
         sampleData.add(new SampleData("Basic2", TestBasic2Activity.class.getName()));
         sampleData.add(new SampleData("Empty", TestEmptyActivity.class.getName()));
         sampleData.add(new SampleData("Fullscreen", TestFullscreenActivity.class.getName()));
         sampleData.add(new SampleData("Login", TestLoginActivity.class.getName()));
-        sampleData.add(new SampleData("Maps", TestMapsActivity.class.getName()));
         sampleData.add(new SampleData("Navigation", TestNavigationActivity.class.getName()));
         sampleData.add(new SampleData("Scrolling", TestScrollingActivity.class.getName()));
         sampleData.add(new SampleData("Settings", TestSettingsActivity.class.getName()));

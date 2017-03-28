@@ -39,4 +39,12 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
+    <style name="TextView1">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+        <item name="android:background">@color/blue_200</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>
