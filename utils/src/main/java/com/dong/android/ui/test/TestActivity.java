@@ -27,7 +27,7 @@ public class TestActivity extends BaseActivity {
                 showDialog();
                 break;
             case R.id.test_text2:
-                LogUtils.e("test2");
+                testDemo();
                 break;
             default:
                 break;
@@ -60,6 +60,8 @@ public class TestActivity extends BaseActivity {
         UIUtils.showToast(PreferencesUtils.getString(mContext, "test_sp", "默认"));
         LogUtils.e("log test");
         EventBus.getDefault().post(new EventUtils<String>(EventUtils.T_CODE_TEST, EventUtils.A_CODE_TEST, "test EventBus"));
+        String json = "{\"name\":\"tom\",\"sex\":\"男\",\"age\":\"24\", \"list\":[1,2,3,4,5],\"end\":\"最后一个\"}";
+        LogUtils.j(json);
     }
 
     private void showDialog() {
