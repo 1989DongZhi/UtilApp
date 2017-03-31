@@ -23,12 +23,12 @@ public class PermissionUtils {
     private static OnPermissionListener mOnPermissionListener;
 
     @TargetApi(Build.VERSION_CODES.M)
-    public static void requestPermissions(Context context, int requestCode
-            , String[] permissions, OnPermissionListener listener) {
+    public static void requestPermissions(Context context, OnPermissionListener listener, String... permissions) {
         if (context instanceof Activity) {
             mOnPermissionListener = listener;
             List<String> deniedPermissions = getDeniedPermissions(context, permissions);
             if (deniedPermissions.size() > 0) {
+                int requestCode = 100;
                 mRequestCode = requestCode;
                 ((Activity) context).requestPermissions(deniedPermissions
                         .toArray(new String[deniedPermissions.size()]), requestCode);
