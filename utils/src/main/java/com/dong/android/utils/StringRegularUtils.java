@@ -70,6 +70,13 @@ public class StringRegularUtils {
         return regexList;
     }
 
+    /**
+     * 正则匹配判断
+     *
+     * @param textString  被监测的文本
+     * @param regularType 正则匹配类型
+     * @return
+     */
     public static boolean isMatchText(String textString, @REGULAR_TYPE String regularType) {
         boolean isMatch = false;
         Pattern regex = Pattern.compile("^" + regularType + "$");
