@@ -9,8 +9,8 @@ import com.dong.android.ui.listsample.SampleData;
 import com.dong.android.ui.test.GlideLoadImageActivity;
 import com.dong.android.ui.test.SVGTintActivity;
 import com.dong.android.ui.test.TestActivity;
-import com.dong.android.utils.LogUtils;
 import com.dong.android.utils.eventbus.EventUtils;
+import com.dong.android.utils.log.LogUtils;
 import com.dong.android.utils.preferences.PreferencesUtils;
 
 import org.greenrobot.eventbus.EventBus;
