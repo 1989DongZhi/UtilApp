@@ -61,9 +61,8 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[]
-                                                   grantResults) {
-        PermissionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                                           @NonNull int[] grantResults) {
+        PermissionUtils.onRequestPermissionsResult(requestCode, grantResults);
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 

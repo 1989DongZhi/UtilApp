@@ -2,11 +2,14 @@ package com.dong.android.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Handler;
 
 import com.dong.android.BuildConfig;
-import com.dong.android.utils.LogUtils;
+import com.dong.android.utils.log.CrashHandler;
+import com.dong.android.utils.log.LogUtils;
 
 /**
  * 作者：<Dr_dong>
@@ -17,6 +20,8 @@ import com.dong.android.utils.LogUtils;
 public class AppManager extends Application {
 
     public static String PACKAGE_NAME;
+    public static String PACKAGE_VERSION_NAME;
+    public static int PACKAGE_VERSION_CODE;
     private static Context mAppContext;
     private static Handler mainThreadHandler;
     private static Resources resources;
@@ -45,7 +50,24 @@ public class AppManager extends Application {
         mAppContext = getApplicationContext();
         resources = mAppContext.getResources();
         mainThreadHandler = new Handler();
+        //初始化基本信息
+        initBaseInfo();
         LogUtils.setLogDebug(BuildConfig.DEBUG);
+        //初始化异常获取工具
+        CrashHandler.getInstance(mAppContext);
+    }
+
+    private void initBaseInfo() {
         PACKAGE_NAME = getPackageName();
+        try {
+            PackageInfo packageInfo = getPackageManager()
+                    .getPackageInfo(PACKAGE_NAME, PackageManager.GET_ACTIVITIES);
+            PACKAGE_VERSION_CODE = packageInfo.versionCode;
+            PACKAGE_VERSION_NAME = packageInfo.versionName == null ? "null" : packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            PACKAGE_VERSION_CODE = -1;
+            PACKAGE_VERSION_NAME = "null";
+        }
     }
 }
