@@ -2,6 +2,8 @@ package com.dong.android.utils.log;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -9,10 +11,7 @@ import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.WindowManager;
-
-import com.dong.android.app.AppManager;
-import com.dong.android.utils.GadgetUtils;
-import com.dong.android.utils.UIUtils;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,7 +21,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -32,26 +34,29 @@ import java.util.Map;
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     private static final String TAG = CrashHandler.class.getSimpleName();
-    private static String CRASH_PATH = Environment.getExternalStorageDirectory() + "/Android/data/" + AppManager.PACKAGE_NAME + "/crash";
-    private static CrashHandler sInstance;// CrashHandler实例
+    public static String PACKAGE_VERSION_NAME;
+    public static int PACKAGE_VERSION_CODE;
+    private static CrashHandler instance;// CrashHandler实例
+    public String packageName;
+    private String crashPath;
     private Thread.UncaughtExceptionHandler mDefaultHandler;// 系统默认的UncaughtException处理类
     private Context mContext;// 程序的Context对象
     private Map<String, String> info = new HashMap<String, String>();// 用来存储设备信息和异常信息
 
-    private CrashHandler() {
-        mContext = AppManager.getAppContext();
+    private CrashHandler(Context context) {
+        mContext = context;
         init();
     }
 
     public static CrashHandler getInstance(Context context) {
         if (context == null) {
-            LogUtils.e("Context is null");
+            Log.e(TAG, "Context is null", new NullPointerException());
             return null;
         }
-        if (sInstance == null) {
-            sInstance = new CrashHandler();
+        if (instance == null) {
+            instance = new CrashHandler(context);
         }
-        return sInstance;
+        return instance;
     }
 
     /**
@@ -61,6 +66,18 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         if (mContext == null) {
             return;
         }
+        packageName = mContext.getPackageName();
+        try {
+            PackageInfo packageInfo = mContext.getPackageManager()
+                    .getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
+            PACKAGE_VERSION_CODE = packageInfo.versionCode;
+            PACKAGE_VERSION_NAME = packageInfo.versionName == null ? "null" : packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            PACKAGE_VERSION_CODE = -1;
+            PACKAGE_VERSION_NAME = "null";
+        }
+        crashPath = Environment.getExternalStorageDirectory() + "/Android/data/" + packageName + "/crash";
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
     }
@@ -96,7 +113,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         new Thread() {
             public void run() {
                 Looper.prepare();
-                UIUtils.showToast("很抱歉,程序出现异常,即将退出");
+                Toast.makeText(mContext, "很抱歉,程序出现异常,即将退出", Toast.LENGTH_LONG).show();
                 // 收集设备参数信息
                 collectDeviceInfo();
                 // 保存日志文件
@@ -113,9 +130,9 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      * 收集设备参数信息
      */
     public void collectDeviceInfo() {
-        info.put("versionName", AppManager.PACKAGE_VERSION_NAME);
-        info.put("versionCode", String.format("%d", AppManager.PACKAGE_VERSION_CODE));
-        info.put("time", GadgetUtils.getCurrentTime());
+        info.put("versionName", PACKAGE_VERSION_NAME);
+        info.put("versionCode", String.format("%d", PACKAGE_VERSION_CODE));
+        info.put("time", getCurrentTime());
 
         Field[] fields = Build.class.getDeclaredFields();
         for (Field field : fields) {
@@ -139,8 +156,8 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      */
     private String getCrashReport(Throwable ex) {
         StringBuffer exceptionStr = new StringBuffer();
-        exceptionStr.append("Version: ").append(AppManager.PACKAGE_VERSION_NAME)
-                .append("(").append(AppManager.PACKAGE_VERSION_CODE).append(")\n")
+        exceptionStr.append("Version: ").append(PACKAGE_VERSION_NAME)
+                .append("(").append(PACKAGE_VERSION_CODE).append(")\n")
                 .append("Android: ").append(Build.VERSION.RELEASE).append("(").append(Build.MODEL).append(")\n")
                 .append("Exception: ").append(ex.getMessage()).append("\n");
         StackTraceElement[] elements = ex.getStackTrace();
@@ -175,16 +192,16 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         sb.append(result);
 
         // 保存文件
-        String fileName = "crash-" + GadgetUtils.getCurrentTime() + ".log";
+        String fileName = "crash-" + getCurrentTime() + ".log";
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             FileOutputStream fos = null;
             try {
-                File dir = new File(CRASH_PATH);
+                File dir = new File(crashPath);
                 Log.i("CrashHandler", dir.toString());
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
-                File file = new File(CRASH_PATH, fileName);
+                File file = new File(crashPath, fileName);
                 if (!file.exists()) {
                     file.createNewFile();
                 }
@@ -253,7 +270,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                                 Intent.createChooser(intent, "Choose Email Client");
                                 context.startActivity(intent);
                             } catch (Exception e) {
-                                UIUtils.showToast("There are no email clients installed.");
+                                Toast.makeText(mContext, "There are no email clients installed.", Toast.LENGTH_LONG).show();
                             } finally {
                                 dialog.dismiss();
                                 android.os.Process.killProcess(android.os.Process.myPid());
@@ -269,6 +286,14 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 .create();
         mDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         mDialog.show();
+    }
+
+    private String getCurrentTime() {
+        long currentTime = System.currentTimeMillis();
+        Date date = new Date(currentTime);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.getDefault());
+        String time = sdf.format(date);
+        return time;
     }
 
 }
