@@ -24,17 +24,20 @@ public class TestActivity extends BaseActivity {
 
     public static final String TAG = TestActivity.class.getSimpleName();
 
-    @OnClick({R.id.test_text1, R.id.test_text2, R.id.test_text3})
+    @OnClick({R.id.test_text1, R.id.test_text2, R.id.test_text3, R.id.test_text4})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.test_text1:
-                showDialog();
+//                showDialog();
                 break;
             case R.id.test_text2:
-                testDemo();
+//                testDemo();
                 break;
             case R.id.test_text3:
-                saveFile();
+//                saveFile();
+                break;
+            case R.id.test_text4:
+                netTest();
                 break;
             default:
                 break;
@@ -71,7 +74,7 @@ public class TestActivity extends BaseActivity {
     }
 
     private void testDemo() {
-        UIUtils.showToast(PreferencesUtils.getString(mContext, "test_sp", "默认"));
+        UIUtils.showToast(PreferencesUtils.get("test_sp", "默认"));
         LogUtils.e("log test");
         EventBus.getDefault().post(new EventUtils<String>(EventUtils.T_CODE_TEST, EventUtils.A_CODE_TEST, "test EventBus"));
         String json = "{\"name\":\"tom\",\"sex\":\"男\",\"age\":\"24\", \"list\":[1,2,3,4,5],\"end\":\"最后一个\"}";
@@ -88,6 +91,10 @@ public class TestActivity extends BaseActivity {
     }
 
     private void saveFile() {
+    }
+
+    private void netTest() {
+
     }
 
 }

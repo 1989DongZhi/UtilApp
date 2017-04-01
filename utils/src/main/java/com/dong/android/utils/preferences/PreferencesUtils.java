@@ -3,6 +3,7 @@ package com.dong.android.utils.preferences;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 
 /**
  * @author <dr_dong>
@@ -11,81 +12,117 @@ import android.os.Bundle;
 public class PreferencesUtils {
 
     public static final String SP_URI = "content://com.dong.android.sp";
+    private static final String TAG = PreferencesUtils.class.getSimpleName();
     private static final Uri sUri = Uri.parse(SP_URI);
+    private static PreferencesUtils instance;
+    private static Context context;
 
-    public static void putString(Context context, String key, String value) {
+    private PreferencesUtils(Context context) {
+        this.context = context;
+    }
+
+    public static PreferencesUtils getInstance(Context context) {
+        if (context == null) {
+            Log.e(TAG, "Context is null", new NullPointerException());
+            return null;
+        }
+        if (instance == null) {
+            instance = new PreferencesUtils(context);
+        }
+        return instance;
+    }
+
+    private static Context getContext() {
+        if (context == null) {
+            Log.e(TAG, "PreferencesUtils cannot be instantiated", new UnsupportedOperationException());
+        }
+        return context;
+    }
+
+    public static void put(String key, String value) {
         Bundle data = new Bundle();
         data.putString(PreferencesProvider.EXTRA_KEY, key);
         data.putString(PreferencesProvider.EXTRA_VALUE, value);
-        context.getContentResolver().call(sUri, PreferencesProvider.METHOD_PUT_STRING, null, data);
+        getContext().getContentResolver().call(sUri, PreferencesProvider.METHOD_PUT_STRING, null, data);
     }
 
-    public static String getString(Context context, String key, String defValue) {
+    public static String get(String key, String defValue) {
         Bundle data = new Bundle();
         data.putString(PreferencesProvider.EXTRA_KEY, key);
         data.putString(PreferencesProvider.EXTRA_DEFAULT_VALUE, defValue);
-        Bundle replyData = context.getContentResolver().call(sUri, PreferencesProvider.METHOD_GET_STRING, null, data);
-        return replyData.getString(PreferencesProvider.EXTRA_VALUE, defValue);
+        return getContext() == null ? defValue :
+                getContext().getContentResolver()
+                        .call(sUri, PreferencesProvider.METHOD_GET_STRING, null, data)
+                        .getString(PreferencesProvider.EXTRA_VALUE, defValue);
     }
 
-    public static void putBoolean(Context context, String key, boolean value) {
+    public static void put(String key, boolean value) {
         Bundle data = new Bundle();
         data.putString(PreferencesProvider.EXTRA_KEY, key);
         data.putBoolean(PreferencesProvider.EXTRA_VALUE, value);
-        context.getContentResolver().call(sUri, PreferencesProvider.METHOD_PUT_BOOLEAN, null, data);
+        getContext().getContentResolver().call(sUri, PreferencesProvider.METHOD_PUT_BOOLEAN, null, data);
     }
 
-    public static boolean getBoolean(Context context, String key, boolean defValue) {
+    public static boolean get(String key, boolean defValue) {
         Bundle data = new Bundle();
         data.putString(PreferencesProvider.EXTRA_KEY, key);
         data.putBoolean(PreferencesProvider.EXTRA_DEFAULT_VALUE, defValue);
-        Bundle replyData = context.getContentResolver().call(sUri, PreferencesProvider.METHOD_GET_BOOLEAN, null, data);
-        return replyData.getBoolean(PreferencesProvider.EXTRA_VALUE, defValue);
+        return getContext() == null ? defValue :
+                getContext().getContentResolver()
+                        .call(sUri, PreferencesProvider.METHOD_GET_BOOLEAN, null, data)
+                        .getBoolean(PreferencesProvider.EXTRA_VALUE, defValue);
+
     }
 
-    public static void putInt(Context context, String key, int value) {
+    public static void put(String key, int value) {
         Bundle data = new Bundle();
         data.putString(PreferencesProvider.EXTRA_KEY, key);
         data.putInt(PreferencesProvider.EXTRA_VALUE, value);
-        context.getContentResolver().call(sUri, PreferencesProvider.METHOD_PUT_INT, null, data);
+        getContext().getContentResolver().call(sUri, PreferencesProvider.METHOD_PUT_INT, null, data);
     }
 
-    public static int getInt(Context context, String key, int defValue) {
+    public static int get(String key, int defValue) {
         Bundle data = new Bundle();
         data.putString(PreferencesProvider.EXTRA_KEY, key);
         data.putInt(PreferencesProvider.EXTRA_DEFAULT_VALUE, defValue);
-        Bundle replyData = context.getContentResolver().call(sUri, PreferencesProvider.METHOD_GET_INT, null, data);
-        return replyData.getInt(PreferencesProvider.EXTRA_VALUE, defValue);
+        return getContext() == null ? defValue :
+                getContext().getContentResolver()
+                        .call(sUri, PreferencesProvider.METHOD_GET_INT, null, data)
+                        .getInt(PreferencesProvider.EXTRA_VALUE, defValue);
     }
 
-    public static void putFloat(Context context, String key, float value) {
+    public static void put(String key, float value) {
         Bundle data = new Bundle();
         data.putString(PreferencesProvider.EXTRA_KEY, key);
         data.putFloat(PreferencesProvider.EXTRA_VALUE, value);
-        context.getContentResolver().call(sUri, PreferencesProvider.METHOD_PUT_FLOAT, null, data);
+        getContext().getContentResolver().call(sUri, PreferencesProvider.METHOD_PUT_FLOAT, null, data);
     }
 
-    public static float getFloat(Context context, String key, float defValue) {
+    public static float get(String key, float defValue) {
         Bundle data = new Bundle();
         data.putString(PreferencesProvider.EXTRA_KEY, key);
         data.putFloat(PreferencesProvider.EXTRA_DEFAULT_VALUE, defValue);
-        Bundle replyData = context.getContentResolver().call(sUri, PreferencesProvider.METHOD_GET_FLOAT, null, data);
-        return replyData.getFloat(PreferencesProvider.EXTRA_VALUE, defValue);
+        return getContext() == null ? defValue :
+                getContext().getContentResolver()
+                        .call(sUri, PreferencesProvider.METHOD_GET_FLOAT, null, data)
+                        .getFloat(PreferencesProvider.EXTRA_VALUE, defValue);
     }
 
-    public static void putLong(Context context, String key, long value) {
+    public static void put(String key, long value) {
         Bundle data = new Bundle();
         data.putString(PreferencesProvider.EXTRA_KEY, key);
         data.putLong(PreferencesProvider.EXTRA_VALUE, value);
-        context.getContentResolver().call(sUri, PreferencesProvider.METHOD_PUT_LONG, null, data);
+        getContext().getContentResolver().call(sUri, PreferencesProvider.METHOD_PUT_LONG, null, data);
     }
 
-    public static long getLong(Context context, String key, long defValue) {
+    public static long get(String key, long defValue) {
         Bundle data = new Bundle();
         data.putString(PreferencesProvider.EXTRA_KEY, key);
         data.putLong(PreferencesProvider.EXTRA_DEFAULT_VALUE, defValue);
-        Bundle replyData = context.getContentResolver().call(sUri, PreferencesProvider.METHOD_GET_LONG, null, data);
-        return replyData.getLong(PreferencesProvider.EXTRA_VALUE, defValue);
+        return getContext() == null ? defValue :
+                getContext().getContentResolver()
+                        .call(sUri, PreferencesProvider.METHOD_GET_LONG, null, data)
+                        .getLong(PreferencesProvider.EXTRA_VALUE, defValue);
     }
 
 
