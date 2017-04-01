@@ -1,4 +1,4 @@
-package com.dong.android.utils;
+package com.dong.android.utils.manager;
 
 import com.dong.android.base.view.BaseActivity;
 
