@@ -9,7 +9,6 @@ import android.os.Handler;
 
 import com.dong.android.BuildConfig;
 import com.dong.android.utils.UIUtils;
-import com.dong.android.utils.log.CrashHandler;
 import com.dong.android.utils.log.LogUtils;
 import com.dong.android.utils.net.NetworkUtils;
 import com.dong.android.utils.preferences.PreferencesUtils;
@@ -61,7 +60,7 @@ public class AppManager extends Application {
         //初始化网络工具
         NetworkUtils.getInstance(mAppContext);
         //初始化异常获取工具
-        CrashHandler.getInstance(mAppContext);
+//        CrashHandler.getInstance(mAppContext);
         //初始化轻量级的数据Preferences
         PreferencesUtils.getInstance(mAppContext);
     }
