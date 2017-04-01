@@ -4,9 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.util.Log;
 import android.widget.Toast;
-
-import com.dong.android.app.AppManager;
 
 /**
  * 作者：<Dr_dong>
@@ -17,25 +16,49 @@ import com.dong.android.app.AppManager;
 
 public class UIUtils {
 
-    private UIUtils() {
-        throw new IllegalAccessError("UIUtils class");
+    private static final String TAG = UIUtils.class.getSimpleName();
+    private static UIUtils instance;
+    private static Context context;
+    private static Handler handler;
+
+    private UIUtils(Context context, Handler handler) {
+        this.context = context;
+        this.handler = handler;
     }
 
-    public static Context getContext() {
-        return AppManager.getAppContext();
+    public static UIUtils getInstance(Context context, Handler handler) {
+        if (context == null) {
+            Log.e(TAG, "Context is null", new NullPointerException());
+            return null;
+        }
+        if (handler == null) {
+            Log.e(TAG, "Handler is null", new NullPointerException());
+            return null;
+        }
+        if (instance == null) {
+            instance = new UIUtils(context, handler);
+        }
+        return instance;
     }
 
-    /**
-     * 获取主线程的handler
-     */
+    private static Context getContext() {
+        if (context == null) {
+            Log.e(TAG, "UIUtils cannot be instantiated", new UnsupportedOperationException());
+        }
+        return context;
+    }
+
     private static Handler getHandler() {
-        return AppManager.getMainThreadHandler();
+        if (handler == null) {
+            Log.e(TAG, "UIUtils cannot be instantiated", new UnsupportedOperationException());
+        }
+        return handler;
     }
 
     /**
      * 在主线程执行runnable
      */
-    private static boolean post(Runnable runnable) {
+    public static boolean post(Runnable runnable) {
         return getHandler().post(runnable);
     }
 
@@ -73,7 +96,7 @@ public class UIUtils {
      * dip 转换 px
      */
     public static int dip2px(int dip) {
-        final float scale = AppManager.getRes().getDisplayMetrics().density;
+        final float scale = getContext().getResources().getDisplayMetrics().density;
         return (int) (dip * scale + 0.5f);
     }
 
@@ -81,7 +104,7 @@ public class UIUtils {
      * dip 转换 px
      */
     public static int dip2px(float dip) {
-        final float scale = AppManager.getRes().getDisplayMetrics().density;
+        final float scale = getContext().getResources().getDisplayMetrics().density;
         return (int) (dip * scale + 0.5f);
     }
 
@@ -89,7 +112,7 @@ public class UIUtils {
      * px 转换 dip
      */
     public static int px2dip(int px) {
-        final float scale = AppManager.getRes().getDisplayMetrics().density;
+        final float scale = getContext().getResources().getDisplayMetrics().density;
         return (int) (px / scale + 0.5f);
     }
 
@@ -97,7 +120,7 @@ public class UIUtils {
      * px 转换 dip
      */
     public static int px2dip(float px) {
-        final float scale = AppManager.getRes().getDisplayMetrics().density;
+        final float scale = getContext().getResources().getDisplayMetrics().density;
         return (int) (px / scale + 0.5f);
     }
 

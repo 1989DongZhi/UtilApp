@@ -53,7 +53,7 @@ public class MainActivity extends ListActivity {
     }
 
     private void addTestData() {
-        PreferencesUtils.putString(mContext, "test_sp", "这是一条sp测试");
+        PreferencesUtils.put("test_sp", "这是一条sp测试");
     }
 
     @Subscribe

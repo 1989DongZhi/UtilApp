@@ -44,7 +44,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     private Map<String, String> info = new HashMap<String, String>();// 用来存储设备信息和异常信息
 
     private CrashHandler(Context context) {
-        mContext = context;
+        this.mContext = context;
         init();
     }
 
@@ -59,16 +59,20 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         return instance;
     }
 
+    private Context getContext() {
+        if (mContext == null) {
+            Log.e(TAG, "CrashHandler cannot be instantiated", new UnsupportedOperationException());
+        }
+        return mContext;
+    }
+
     /**
      * 初始化
      */
     public void init() {
-        if (mContext == null) {
-            return;
-        }
-        packageName = mContext.getPackageName();
+        packageName = getContext().getPackageName();
         try {
-            PackageInfo packageInfo = mContext.getPackageManager()
+            PackageInfo packageInfo = getContext().getPackageManager()
                     .getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
             PACKAGE_VERSION_CODE = packageInfo.versionCode;
             PACKAGE_VERSION_NAME = packageInfo.versionName == null ? "null" : packageInfo.versionName;
@@ -106,20 +110,20 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      * @return true 如果处理了该异常信息;否则返回false.
      */
     public boolean handleException(Throwable ex) {
-        if (ex == null || mContext == null)
+        if (ex == null || getContext() == null)
             return false;
         final String crashReport = getCrashReport(ex);
         LogUtils.i(TAG, crashReport);
         new Thread() {
             public void run() {
                 Looper.prepare();
-                Toast.makeText(mContext, "很抱歉,程序出现异常,即将退出", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "很抱歉,程序出现异常,即将退出", Toast.LENGTH_LONG).show();
                 // 收集设备参数信息
                 collectDeviceInfo();
                 // 保存日志文件
                 saveCrashInfo2File(ex);
 //                File file = save2File(crashReport);
-//                sendAppCrashReport(mContext, crashReport, file);
+//                sendAppCrashReport(getContext(), crashReport, file);
                 Looper.loop();
             }
         }.start();
@@ -270,7 +274,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                                 Intent.createChooser(intent, "Choose Email Client");
                                 context.startActivity(intent);
                             } catch (Exception e) {
-                                Toast.makeText(mContext, "There are no email clients installed.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, "There are no email clients installed.", Toast.LENGTH_LONG).show();
                             } finally {
                                 dialog.dismiss();
                                 android.os.Process.killProcess(android.os.Process.myPid());

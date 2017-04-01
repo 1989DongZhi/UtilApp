@@ -8,8 +8,11 @@ import android.content.res.Resources;
 import android.os.Handler;
 
 import com.dong.android.BuildConfig;
+import com.dong.android.utils.UIUtils;
 import com.dong.android.utils.log.CrashHandler;
 import com.dong.android.utils.log.LogUtils;
+import com.dong.android.utils.net.NetworkUtils;
+import com.dong.android.utils.preferences.PreferencesUtils;
 
 /**
  * 作者：<Dr_dong>
@@ -53,8 +56,14 @@ public class AppManager extends Application {
         //初始化基本信息
         initBaseInfo();
         LogUtils.setLogDebug(BuildConfig.DEBUG);
+        //初始化UI工具
+        UIUtils.getInstance(mAppContext, mainThreadHandler);
+        //初始化网络工具
+        NetworkUtils.getInstance(mAppContext);
         //初始化异常获取工具
         CrashHandler.getInstance(mAppContext);
+        //初始化轻量级的数据Preferences
+        PreferencesUtils.getInstance(mAppContext);
     }
 
     private void initBaseInfo() {
