@@ -1,4 +1,4 @@
-package com.dong.android.utils;
+package com.dong.android.utils.image;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
