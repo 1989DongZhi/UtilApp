@@ -25,14 +25,17 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 
-import static android.net.sip.SipErrorCode.TIME_OUT;
-
 /**
  * @author <dr_dong>
  * @time 2017/4/1 10:48
  * 描述: 获取网络请求Retrofit
  */
 public class RequestManager {
+
+    /**
+     * 超时时间限制6秒
+     */
+    public static final int TIME_OUT = 6;
 
     /**
      * 返回为String格式
@@ -130,7 +133,8 @@ public class RequestManager {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.readTimeout(TIME_OUT, TimeUnit.SECONDS)
                 .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
-                .cache(new Cache(new File(AppManager.getAppContext().getCacheDir(), "net_cache"), HTTP_RESPONSE_DISK_CACHE_MAX_SIZE))
+                .cache(new Cache(new File(AppManager.getAppContext().getCacheDir(), "net_cache"),
+                        HTTP_RESPONSE_DISK_CACHE_MAX_SIZE))
                 .addInterceptor(new CustomInterceptor())
                 .addInterceptor(cacheControlInterceptor)
                 .addNetworkInterceptor(cacheControlInterceptor);
@@ -150,7 +154,8 @@ public class RequestManager {
      * @param filePath
      * @param fileName
      */
-    public static void downloadFile(String url, final String filePath, final String fileName, final FileDownloadCallback callback) {
+    public static void downloadFile(String url, final String filePath, final String fileName,
+                                    final FileDownloadCallback callback) {
         final Request request = new Request.Builder().get().url(url).build();
         new AsyncTaskUtils<File>() {
             @Override
@@ -187,7 +192,8 @@ public class RequestManager {
      * @return
      * @throws IOException
      */
-    private static File saveFile(@NonNull Response response, @NonNull String filePath, @NonNull String fileName) {
+    private static File saveFile(@NonNull Response response, @NonNull String filePath, @NonNull
+            String fileName) {
         InputStream is;
         byte[] buf = new byte[2048];
         int len;
