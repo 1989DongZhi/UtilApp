@@ -12,4 +12,8 @@ public interface NetworkTestView extends BaseView {
 
     void updateFail();
 
+    void requestSuccess(String result);
+
+    void requestFail();
+
 }

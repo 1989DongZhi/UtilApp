@@ -21,6 +21,8 @@ public class NetworkTestActivity extends BaseActivity<NetworkTestPresenter> impl
     public static final String TAG = NetworkTestActivity.class.getSimpleName();
     @BindView(R.id.send_btn)
     Button sendBtn;
+    @BindView(R.id.request_button)
+    Button requestBtn;
     @BindView(R.id.log_edit)
     EditText logEdit;
     @BindView(R.id.send_result_txt)
@@ -28,11 +30,14 @@ public class NetworkTestActivity extends BaseActivity<NetworkTestPresenter> impl
     @BindView(R.id.log_info_txt)
     TextView logInfoTxt;
 
-    @OnClick({R.id.send_btn})
+    @OnClick({R.id.send_btn, R.id.request_button})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.send_btn:
                 sendLogTxt();
+                break;
+            case R.id.request_button:
+                requestLogInfo();
                 break;
             default:
                 break;
@@ -73,8 +78,22 @@ public class NetworkTestActivity extends BaseActivity<NetworkTestPresenter> impl
         sendResultTxt.setText("失败");
     }
 
+    @Override
+    public void requestSuccess(String result) {
+        logInfoTxt.setText(result);
+    }
+
+    @Override
+    public void requestFail() {
+
+    }
+
     private void sendLogTxt() {
         mPresenter.test(logEdit.getText().toString());
+    }
+
+    private void requestLogInfo() {
+        mPresenter.requestLogInfo();
     }
 
 }

@@ -3,6 +3,7 @@ package com.dong.android.ui.test.net;
 import com.dong.android.R;
 import com.dong.android.base.presenter.BasePresenter;
 import com.dong.android.net.JsonCallback;
+import com.dong.android.net.StringCallback;
 import com.dong.android.utils.UIUtils;
 import com.dong.android.utils.net.NetworkUtils;
 
@@ -37,6 +38,25 @@ public class NetworkTestPresenter extends BasePresenter<NetworkTestView, Network
         } else {
             UIUtils.showToast(R.string.network_unavailable);
             mView.updateFail();
+        }
+    }
+
+    public void requestLogInfo() {
+        if (NetworkUtils.isAvailable()) {
+            mModel.request(new StringCallback(this) {
+                @Override
+                protected void onSuccess(String body) {
+                    if (body != null) {
+                        mView.requestSuccess(body);
+                    } else {
+                        mView.requestFail();
+                    }
+                }
+            });
+
+        } else {
+            UIUtils.showToast(R.string.network_unavailable);
+            mView.requestFail();
         }
     }
 

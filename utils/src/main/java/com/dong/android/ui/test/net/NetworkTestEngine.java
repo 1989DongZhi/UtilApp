@@ -3,6 +3,7 @@ package com.dong.android.ui.test.net;
 import org.json.JSONObject;
 
 import retrofit2.Call;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -14,4 +15,8 @@ public interface NetworkTestEngine {
 
     @POST("log.php")
     Call<JSONObject> testRequest(@Query("loginfo") String loginfo);
+
+    @GET("loginfo.txt")
+    Call<String> requestLogInfo();
+
 }

@@ -11,6 +11,14 @@
         android:layout_alignParentEnd="true"
         android:text="发送" />
 
+    <Button
+        android:id="@+id/request_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/send_btn"
+        android:layout_alignParentEnd="true"
+        android:text="请求" />
+
     <EditText
         android:id="@+id/log_edit"
         android:layout_width="wrap_content"
