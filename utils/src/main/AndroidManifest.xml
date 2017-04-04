@@ -38,6 +38,7 @@
         <activity android:name=".ui.test.SVGTintActivity" />
         <activity android:name=".ui.test.GlideLoadImageActivity" />
         <activity android:name=".ui.test.TestActivity" />
+        <activity android:name=".ui.test.net.NetworkTestActivity" />
 
         <activity android:name=".ui.gnative.AndroidNativeActivity" />
         <activity

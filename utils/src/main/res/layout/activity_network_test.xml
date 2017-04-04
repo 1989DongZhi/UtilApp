@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/send_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:text="发送" />
+
+    <EditText
+        android:id="@+id/log_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="96dp"
+        android:layout_alignBottom="@+id/send_btn"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/send_btn"
+        android:ems="10"
+        android:inputType="textMultiLine" />
+
+    <TextView
+        android:id="@+id/send_result_txt"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/log_info_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/log_edit"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/send_result_txt"
+        android:background="@color/grey_300"
+        android:text="TextView" />
+
+</RelativeLayout>
