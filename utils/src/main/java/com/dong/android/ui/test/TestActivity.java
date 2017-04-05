@@ -1,6 +1,5 @@
 package com.dong.android.ui.test;
 
-import android.Manifest;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -8,14 +7,16 @@ import android.view.View;
 import com.dong.android.R;
 import com.dong.android.base.presenter.BasePresenter;
 import com.dong.android.base.view.BaseActivity;
+import com.dong.android.utils.GadgetUtils;
 import com.dong.android.utils.UIUtils;
 import com.dong.android.utils.eventbus.EventUtils;
+import com.dong.android.utils.files.FileUtils;
 import com.dong.android.utils.log.LogUtils;
-import com.dong.android.utils.permission.PermissionUtils;
 import com.dong.android.utils.preferences.PreferencesUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.OnClick;
@@ -37,7 +38,7 @@ public class TestActivity extends BaseActivity {
 //                saveFile();
                 break;
             case R.id.test_text4:
-                netTest();
+                test();
                 break;
             default:
                 break;
@@ -62,7 +63,6 @@ public class TestActivity extends BaseActivity {
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        PermissionUtils.requestPermissions(mContext, null, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
     private void showDialog() {
@@ -93,8 +93,9 @@ public class TestActivity extends BaseActivity {
     private void saveFile() {
     }
 
-    private void netTest() {
-
+    private void test() {
+        File file = FileUtils.createNewFile(FileUtils.getDirPath(mContext, FileUtils.DATA_PATH), "test.txt");
+        LogUtils.e(GadgetUtils.formatTime(file.lastModified()));
     }
 
 }

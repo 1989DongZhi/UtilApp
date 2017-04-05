@@ -87,7 +87,7 @@ public class StringRegularUtils {
 
     @StringDef({REGULAR_URL, REGULAR_PHONE_NUMBER, REGULAR_EMAIL})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface REGULAR_TYPE {
+    private @interface REGULAR_TYPE {
     }
 
 }

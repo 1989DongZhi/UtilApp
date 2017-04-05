@@ -13,10 +13,13 @@ public class GadgetUtils {
 
     public static String getCurrentTime() {
         long currentTime = System.currentTimeMillis();
+        return formatTime(currentTime);
+    }
+
+    public static String formatTime(long currentTime) {
         Date date = new Date(currentTime);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.getDefault());
-        String time = sdf.format(date);
-        return time;
+        return sdf.format(date);
     }
 
 }
