@@ -1,5 +1,6 @@
 package com.dong.android.ui.test.net;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 
 import com.dong.android.R;
 import com.dong.android.base.view.BaseActivity;
+import com.dong.android.utils.permission.PermissionUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -58,13 +60,11 @@ public class NetworkTestActivity extends BaseActivity<NetworkTestPresenter> impl
     @Override
     protected void setListener() {
 
-
     }
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-
-
+        PermissionUtils.requestPermissions(mContext, null, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
     @Override
