@@ -48,7 +48,7 @@ public class BitmapUtils {
 
     public static Bitmap getFitSampleBitmap(InputStream inputStream, String catchFilePath, int
             width, int height) throws Exception {
-        return getFitSampleBitmap(FileUtils.putStreamToFile(catchFilePath, inputStream), width,
+        return getFitSampleBitmap(FileUtils.putStreamToFile(catchFilePath, inputStream).getPath(), width,
                 height);
     }
 

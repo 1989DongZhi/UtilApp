@@ -138,6 +138,7 @@ public class RequestManager {
                 .addInterceptor(new CustomInterceptor())
                 .addInterceptor(cacheControlInterceptor)
                 .addNetworkInterceptor(cacheControlInterceptor);
+//                .addNetworkInterceptor(new StethoInterceptor());
         if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor bodyInterceptor = new HttpLoggingInterceptor();
             bodyInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
