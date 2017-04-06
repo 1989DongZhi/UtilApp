@@ -124,4 +124,14 @@ public class UIUtils {
         return (int) (px / scale + 0.5f);
     }
 
+    /**
+     * 获取Pixel
+     *
+     * @param resId dip资源ID
+     * @return
+     */
+    public static int getDimenSize(int resId) {
+        return getContext().getResources().getDimensionPixelSize(resId);
+    }
+
 }
