@@ -55,6 +55,14 @@ public class AppManager extends Application {
         //初始化基本信息
         initBaseInfo();
         LogUtils.setLogDebug(BuildConfig.DEBUG);
+
+//        //初始化 Stetho
+//        Stetho.initialize(
+//                Stetho.newInitializerBuilder(this)
+//                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+//                        .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
+//                        .build());
+
         //初始化UI工具
         UIUtils.getInstance(mAppContext, mainThreadHandler);
         //初始化网络工具
