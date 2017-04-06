@@ -1,4 +1,4 @@
-package com.dong.android.utils.files;
+package com.dong.android.utils.data;
 
 import android.content.Context;
 import android.os.Environment;
@@ -7,8 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Retention;
@@ -28,6 +30,7 @@ public class FileUtils {
     public static final int CACHE_PATH = 1; // /data/user/0/com.dong.android/cache
     public static final int ROOT_PATH = 2;  // /storage/emulated/0
     public static final int DATA_PATH = 3;  // /storage/emulated/0/Android/data/com.dong.android
+    private static final int DEFAULT_BUFFER_SIZE = 1024 * 8;
 
     private FileUtils() {
         throw new UnsupportedOperationException("FileUtils cannot be instantiated");
@@ -41,21 +44,23 @@ public class FileUtils {
      * @return 缓存路径
      * @throws IOException
      */
-    public static String putStreamToFile(String catchFile, InputStream inStream) throws IOException {
+    public static File putStreamToFile(String catchFile, InputStream inStream) throws IOException {
         File tempFile = new File(catchFile);
         if (tempFile.exists()) {
-            tempFile.delete();
+            boolean deleteSuccess = tempFile.delete();
+            Log.e(TAG, tempFile + "file delete " + deleteSuccess);
         }
-        tempFile.createNewFile();
-        FileOutputStream fileOutputStream = new FileOutputStream(tempFile);
-        byte[] buffer = new byte[1024];
-        int len = 0;
-        while ((len = inStream.read(buffer)) != -1) {
-            fileOutputStream.write(buffer, 0, len);
+        if (tempFile.createNewFile()) {
+            FileOutputStream fileOutputStream = new FileOutputStream(tempFile);
+            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+            int len;
+            while ((len = inStream.read(buffer)) != -1) {
+                fileOutputStream.write(buffer, 0, len);
+            }
+            inStream.close();
+            fileOutputStream.close();
         }
-        inStream.close();
-        fileOutputStream.close();
-        return catchFile;
+        return tempFile;
     }
 
     /**
@@ -63,19 +68,15 @@ public class FileUtils {
      */
     public static boolean hasSdcard() {
         String state = Environment.getExternalStorageState();
-        if (state.equals(Environment.MEDIA_MOUNTED)) {
-            return true;
-        } else {
-            return false;
-        }
+        return state.equals(Environment.MEDIA_MOUNTED);
     }
 
     /**
      * 获取指定文件目录
      *
-     * @param context
-     * @param type
-     * @return
+     * @param context 上下文
+     * @param type    获取类型
+     * @return 存储路径
      */
     @Nullable
     public static String getDirPath(Context context, @PATH_TYPE int type) {
@@ -93,6 +94,8 @@ public class FileUtils {
                 break;
             case DATA_PATH:
                 parentDir = context.getExternalCacheDir().getParent();
+                break;
+            default:
                 break;
         }
         return parentDir;
@@ -260,6 +263,97 @@ public class FileUtils {
             size += file.length();
         }
         return size;
+    }
+
+    /**
+     * 将String保存为文件
+     *
+     * @param str      保存内容
+     * @param filePath 保存路径
+     * @param fileName 保存文件
+     * @throws IOException 异常
+     */
+    public static File saveFile(String str, String filePath, String fileName) throws IOException {
+        File file = FileUtils.getFile(filePath, fileName);
+        try (FileWriter fw = new FileWriter(file)) {
+            fw.write(str);
+            fw.close();
+        }
+        return file;
+    }
+
+    /**
+     * 将String保存为文件
+     *
+     * @param is       保存内容
+     * @param filePath 保存路径
+     * @param fileName 保存文件
+     * @throws IOException 异常
+     */
+    public static File saveFile(InputStream is, String filePath, String fileName) throws IOException {
+        File file = FileUtils.getFile(filePath, fileName);
+        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+        int len;
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            while ((len = is.read(buffer)) != -1) {
+                fos.write(buffer, 0, len);
+            }
+            fos.flush();
+            fos.close();
+        }
+        return file;
+    }
+
+    /**
+     * 保存文本
+     *
+     * @param txt      内容
+     * @param filePath 保存路径
+     * @param fileName 文件名字
+     * @param append   是否累加
+     * @throws IOException
+     */
+    public static void saveText(String txt, String filePath, String fileName, boolean append) throws IOException {
+        File file = new File(filePath, fileName);
+        if (!append && file.exists()) {
+            boolean deleteSuccess = file.delete();
+            Log.e(TAG, file + " has delete " + deleteSuccess);
+        }
+        try (FileOutputStream os = new FileOutputStream(file)) {
+            os.write(txt.getBytes("UTF-8"));
+            os.close();
+        }
+    }
+
+    /**
+     * Close closable object and wrap {@link IOException} with {@link RuntimeException}
+     *
+     * @param closeable closeable object
+     */
+    public static void close(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * InputStream to String
+     *
+     * @param input 输入
+     * @return 结果
+     * @throws IOException 异常
+     */
+    public String inputStream2String(InputStream input) throws IOException {
+        StringBuilder out = new StringBuilder();
+        byte[] b = new byte[DEFAULT_BUFFER_SIZE];
+        for (int n; (n = input.read(b)) != -1; ) {
+            out.append(new String(b, 0, n));
+        }
+        return out.toString();
     }
 
     @IntDef({CACHE_PATH, ROOT_PATH, DATA_PATH})

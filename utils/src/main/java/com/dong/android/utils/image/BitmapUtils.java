@@ -4,7 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.dong.android.utils.files.FileUtils;
+import com.dong.android.utils.data.FileUtils;
 
 import java.io.FileDescriptor;
 import java.io.FileInputStream;

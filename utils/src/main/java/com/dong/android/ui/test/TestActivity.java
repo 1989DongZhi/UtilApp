@@ -9,8 +9,8 @@ import com.dong.android.base.presenter.BasePresenter;
 import com.dong.android.base.view.BaseActivity;
 import com.dong.android.utils.GadgetUtils;
 import com.dong.android.utils.UIUtils;
+import com.dong.android.utils.data.FileUtils;
 import com.dong.android.utils.eventbus.EventUtils;
-import com.dong.android.utils.files.FileUtils;
 import com.dong.android.utils.log.LogUtils;
 import com.dong.android.utils.preferences.PreferencesUtils;
 

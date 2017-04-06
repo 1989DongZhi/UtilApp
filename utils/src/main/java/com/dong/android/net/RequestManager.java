@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.dong.android.BuildConfig;
 import com.dong.android.app.AppManager;
-import com.dong.android.utils.data.IOUtils;
+import com.dong.android.utils.data.FileUtils;
 import com.dong.android.utils.manager.AsyncTaskUtils;
 import com.dong.android.utils.net.CacheControlInterceptor;
 import com.dong.android.utils.net.JsonConverterFactory;
@@ -167,8 +167,14 @@ public class RequestManager {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if (null != response)
-                    file = saveFile(response, filePath, fileName);
+                if (null != response) {
+                    try {
+                        file = FileUtils.saveFile(response.body().byteStream(), filePath, fileName);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    FileUtils.close(response.body());
+                }
                 return file;
             }
 
@@ -219,8 +225,8 @@ public class RequestManager {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(response.body());
-            IOUtils.closeQuietly(fos);
+            FileUtils.close(response.body());
+            FileUtils.close(fos);
         }
         return null;
     }
