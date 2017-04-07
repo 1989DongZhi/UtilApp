@@ -4,11 +4,11 @@ import android.support.annotation.NonNull;
 
 import com.dong.android.BuildConfig;
 import com.dong.android.app.AppManager;
-import com.dong.android.utils.data.FileUtils;
-import com.dong.android.utils.manager.AsyncTaskUtils;
-import com.dong.android.utils.net.CacheControlInterceptor;
-import com.dong.android.utils.net.JsonConverterFactory;
-import com.dong.android.utils.net.StringConverterFactory;
+import com.dong.android.utils.AsyncTaskUtils;
+import com.dong.utils.data.FileUtils;
+import com.dong.utils.net.CacheControlInterceptor;
+import com.dong.utils.net.JsonConverterFactory;
+import com.dong.utils.net.StringConverterFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;

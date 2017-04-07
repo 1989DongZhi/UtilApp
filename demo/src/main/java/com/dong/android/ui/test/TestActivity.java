@@ -7,12 +7,12 @@ import android.view.View;
 import com.dong.android.R;
 import com.dong.android.base.presenter.BasePresenter;
 import com.dong.android.base.view.BaseActivity;
-import com.dong.android.utils.GadgetUtils;
-import com.dong.android.utils.UIUtils;
-import com.dong.android.utils.data.FileUtils;
 import com.dong.android.utils.eventbus.EventUtils;
-import com.dong.android.utils.log.LogUtils;
-import com.dong.android.utils.preferences.PreferencesUtils;
+import com.dong.utils.GadgetUtils;
+import com.dong.utils.UIUtils;
+import com.dong.utils.data.FileUtils;
+import com.dong.utils.log.LogUtils;
+import com.dong.utils.preferences.PreferencesUtils;
 
 import org.greenrobot.eventbus.EventBus;
 

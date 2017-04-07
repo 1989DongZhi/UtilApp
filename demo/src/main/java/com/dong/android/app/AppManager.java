@@ -8,10 +8,10 @@ import android.content.res.Resources;
 import android.os.Handler;
 
 import com.dong.android.BuildConfig;
-import com.dong.android.utils.UIUtils;
-import com.dong.android.utils.log.LogUtils;
-import com.dong.android.utils.net.NetworkUtils;
-import com.dong.android.utils.preferences.PreferencesUtils;
+import com.dong.utils.UIUtils;
+import com.dong.utils.log.LogUtils;
+import com.dong.utils.net.NetworkUtils;
+import com.dong.utils.preferences.PreferencesUtils;
 
 /**
  * 作者：<Dr_dong>

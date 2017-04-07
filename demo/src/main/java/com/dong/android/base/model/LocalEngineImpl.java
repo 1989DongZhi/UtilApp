@@ -2,7 +2,7 @@ package com.dong.android.base.model;
 
 import com.dong.android.app.AppManager;
 import com.dong.android.db.DbItem;
-import com.dong.android.utils.cache.ACache;
+import com.dong.utils.cache.ACache;
 
 import org.json.JSONObject;
 

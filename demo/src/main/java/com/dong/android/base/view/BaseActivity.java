@@ -8,10 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.dong.android.base.presenter.BasePresenter;
 import com.dong.android.ui.main.MainActivity;
-import com.dong.android.utils.UIUtils;
-import com.dong.android.utils.manager.ActivitiesManager;
-import com.dong.android.utils.permission.PermissionUtils;
 import com.dong.android.widget.MyProgressDialog;
+import com.dong.utils.UIUtils;
+import com.dong.utils.manager.ActivitiesManager;
+import com.dong.utils.permission.PermissionUtils;
 
 import butterknife.ButterKnife;
 

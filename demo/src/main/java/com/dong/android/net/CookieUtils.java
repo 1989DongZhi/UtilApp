@@ -1,6 +1,6 @@
 package com.dong.android.net;
 
-import com.dong.android.utils.preferences.PreferencesUtils;
+import com.dong.utils.preferences.PreferencesUtils;
 
 /**
  * @author <dr_dong>

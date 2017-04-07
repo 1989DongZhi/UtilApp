@@ -1,8 +1,8 @@
 package com.dong.android.net;
 
 import com.dong.android.base.presenter.BasePresenter;
-import com.dong.android.utils.UIUtils;
-import com.dong.android.utils.log.LogUtils;
+import com.dong.utils.UIUtils;
+import com.dong.utils.log.LogUtils;
 
 import org.json.JSONObject;
 

@@ -1,14 +1,15 @@
 package com.dong.android.utils.image;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.Transformation;
-import com.dong.android.R;
-import com.dong.android.app.AppManager;
+import com.dong.utils.R;
 
 /**
  * 作者：<Dr_dong>
@@ -18,6 +19,9 @@ import com.dong.android.app.AppManager;
 
 public class ImageLoader {
 
+    private static final String TAG = ImageLoader.class.getSimpleName();
+    private static ImageLoader instance;
+    private static Context context;
     private static int[] mColors = {R.color.load_image_color0,
             R.color.load_image_color1, R.color.load_image_color2, R.color.load_image_color3,
             R.color.load_image_color4, R.color.load_image_color5, R.color.load_image_color6,
@@ -25,6 +29,28 @@ public class ImageLoader {
             R.color.load_image_color10, R.color.load_image_color11, R.color.load_image_color12,
             R.color.load_image_color13, R.color.load_image_color14, R.color.load_image_color15
     };
+
+    private ImageLoader(Context context) {
+        this.context = context;
+    }
+
+    public static ImageLoader getInstance(Context context) {
+        if (context == null) {
+            Log.e(TAG, "Context is null", new NullPointerException());
+            return null;
+        }
+        if (instance == null) {
+            instance = new ImageLoader(context);
+        }
+        return instance;
+    }
+
+    private static Context getContext() {
+        if (context == null) {
+            Log.e(TAG, "ImageLoader cannot be instantiated", new UnsupportedOperationException());
+        }
+        return context;
+    }
 
     /**
      * 获取随机颜色资源
@@ -39,9 +65,9 @@ public class ImageLoader {
                                @TransformationUtils.TRANSFORMATE_TYPE int type) {
         DrawableTypeRequest request;
         if (resId != 0 && url == null) {
-            request = Glide.with(AppManager.getAppContext()).load(resId);
+            request = Glide.with(getContext()).load(resId);
         } else if (resId == 0 && url != null) {
-            request = Glide.with(AppManager.getAppContext()).load(url);
+            request = Glide.with(getContext()).load(url);
         } else {
             return;
         }
@@ -52,7 +78,7 @@ public class ImageLoader {
             request.override(width, height);
         }
         if (type != TransformationUtils.Original) {
-            request.bitmapTransform(TransformationUtils.bitmapTransform(type));
+            request.bitmapTransform(TransformationUtils.bitmapTransform(getContext(), type));
         }
         request.into(iv);
     }
@@ -62,9 +88,9 @@ public class ImageLoader {
                                Transformation<Bitmap>[] transformations) {
         DrawableTypeRequest request;
         if (resId != 0 && url == null) {
-            request = Glide.with(AppManager.getAppContext()).load(resId);
+            request = Glide.with(getContext()).load(resId);
         } else if (resId == 0 && url != null) {
-            request = Glide.with(AppManager.getAppContext()).load(url);
+            request = Glide.with(getContext()).load(url);
         } else {
             return;
         }

@@ -11,8 +11,8 @@ import com.dong.android.ui.test.SVGTintActivity;
 import com.dong.android.ui.test.TestActivity;
 import com.dong.android.ui.test.net.NetworkTestActivity;
 import com.dong.android.utils.eventbus.EventUtils;
-import com.dong.android.utils.log.LogUtils;
-import com.dong.android.utils.preferences.PreferencesUtils;
+import com.dong.utils.log.LogUtils;
+import com.dong.utils.preferences.PreferencesUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
