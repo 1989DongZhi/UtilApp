@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.os.Handler;
 
 import com.dong.android.BuildConfig;
+import com.dong.android.utils.image.ImageLoader;
 import com.dong.utils.UIUtils;
 import com.dong.utils.log.LogUtils;
 import com.dong.utils.net.NetworkUtils;
@@ -71,6 +72,8 @@ public class AppManager extends Application {
 //        CrashHandler.getInstance(mAppContext);
         //初始化轻量级的数据Preferences
         PreferencesUtils.getInstance(mAppContext);
+        //初始化图片加载工具
+        ImageLoader.getInstance(mAppContext);
     }
 
     private void initBaseInfo() {

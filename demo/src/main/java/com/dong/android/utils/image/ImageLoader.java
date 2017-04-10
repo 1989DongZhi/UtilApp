@@ -46,10 +46,10 @@ public class ImageLoader {
     }
 
     private static Context getContext() {
-        if (context == null) {
+        if (instance.context == null) {
             Log.e(TAG, "ImageLoader cannot be instantiated", new UnsupportedOperationException());
         }
-        return context;
+        return instance.context;
     }
 
     /**
