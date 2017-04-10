@@ -32,6 +32,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':utils')
+    compile project(':recycler')
     //glide
     compile 'com.github.bumptech.glide:glide:3.7.0'
     //推特提供的一个针对Glide特效动画库
