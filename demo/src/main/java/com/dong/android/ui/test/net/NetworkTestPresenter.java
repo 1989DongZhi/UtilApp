@@ -4,8 +4,8 @@ import com.dong.android.R;
 import com.dong.android.base.presenter.BasePresenter;
 import com.dong.android.net.JsonCallback;
 import com.dong.android.net.StringCallback;
-import com.dong.android.utils.UIUtils;
-import com.dong.android.utils.net.NetworkUtils;
+import com.dong.utils.UIUtils;
+import com.dong.utils.net.NetworkUtils;
 
 import org.json.JSONObject;
 

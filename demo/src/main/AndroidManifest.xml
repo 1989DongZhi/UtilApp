@@ -95,7 +95,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
-            android:name=".utils.preferences.PreferencesProvider"
+            android:name="com.dong.utils.preferences.PreferencesProvider"
             android:authorities="com.dong.android.sp" />
 
     </application>

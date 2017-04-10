@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dong.android.R;
-import com.dong.android.utils.UIUtils;
+import com.dong.utils.UIUtils;
 
 /**
  * 作者：<Dr_dong>

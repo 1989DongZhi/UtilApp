@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dong.android.base.presenter.BasePresenter;
-import com.dong.android.utils.UIUtils;
 import com.dong.android.widget.MyProgressDialog;
+import com.dong.utils.UIUtils;
 
 import butterknife.ButterKnife;
 

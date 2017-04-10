@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.dong.android.R;
 import com.dong.android.base.view.BaseActivity;
-import com.dong.android.utils.permission.PermissionUtils;
+import com.dong.utils.permission.PermissionUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;

@@ -8,8 +8,7 @@ import android.support.annotation.IntDef;
 
 import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.dong.android.R;
-import com.dong.android.app.AppManager;
+import com.dong.utils.R;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -73,73 +72,72 @@ public abstract class TransformationUtils {
         return transformations;
     }
 
-    public static Transformation<Bitmap>[] bitmapTransform(@TRANSFORMATE_TYPE Integer type) {
-        Context mContext = AppManager.getAppContext();
+    public static Transformation<Bitmap>[] bitmapTransform(Context context, @TRANSFORMATE_TYPE Integer type) {
         switch (type) {
             case Original:
                 return null;
             case Mask:
-                return transform(new CenterCrop(mContext),
-                        new MaskTransformation(mContext, R.drawable.mask_starfish));
+                return transform(new CenterCrop(context),
+                        new MaskTransformation(context, R.drawable.mask_starfish));
             case NinePatchMask:
-                return transform(new CenterCrop(mContext),
-                        new MaskTransformation(mContext, R.drawable.mask_chat_right));
+                return transform(new CenterCrop(context),
+                        new MaskTransformation(context, R.drawable.mask_chat_right));
             case CropTop:
-                return transform(new CropTransformation(mContext, 300, 100, CropTransformation
+                return transform(new CropTransformation(context, 300, 100, CropTransformation
                         .CropType.TOP));
             case CropCenter:
-                return transform(new CropTransformation(mContext, 300, 100, CropTransformation
+                return transform(new CropTransformation(context, 300, 100, CropTransformation
                         .CropType.CENTER));
             case CropBottom:
                 return transform(
-                        new CropTransformation(mContext, 300, 100, CropTransformation.CropType
+                        new CropTransformation(context, 300, 100, CropTransformation.CropType
                                 .BOTTOM));
             case CropSquare:
-                return transform(new CropSquareTransformation(mContext));
+                return transform(new CropSquareTransformation(context));
             case CropCircle:
-                return transform(new CropCircleTransformation(mContext));
+                return transform(new CropCircleTransformation(context));
             case ColorFilter:
-                return transform(new ColorFilterTransformation(mContext, Color.argb(80,
+                return transform(new ColorFilterTransformation(context, Color.argb(80,
                         255, 0, 0)));
             case Grayscale:
-                return transform(new GrayscaleTransformation(mContext));
+                return transform(new GrayscaleTransformation(context));
             case RoundedCorners:
-                return transform(new RoundedCornersTransformation(mContext, 30, 0,
+                return transform(new RoundedCornersTransformation(context, 30, 0,
                         RoundedCornersTransformation.CornerType.BOTTOM));
             case Blur:
                 return transform(
-                        new BlurTransformation(mContext, 25));
+                        new BlurTransformation(context, 25));
             case Toon:
                 return transform(
-                        new ToonFilterTransformation(mContext));
+                        new ToonFilterTransformation(context));
             case Sepia:
                 return transform(
-                        new SepiaFilterTransformation(mContext));
+                        new SepiaFilterTransformation(context));
             case Contrast:
                 return transform(
-                        new ContrastFilterTransformation(mContext, 2.0f));
+                        new ContrastFilterTransformation(context, 2.0f));
             case Invert:
                 return transform(
-                        new InvertFilterTransformation(mContext));
+                        new InvertFilterTransformation(context));
             case Pixel:
                 return transform(
-                        new PixelationFilterTransformation(mContext, 20));
+                        new PixelationFilterTransformation(context, 20));
             case Sketch:
                 return transform(
-                        new SketchFilterTransformation(mContext));
+                        new SketchFilterTransformation(context));
             case Swirl:
                 return transform(
-                        new SwirlFilterTransformation(mContext, 0.5f, 1.0f,
+                        new SwirlFilterTransformation(context, 0.5f, 1.0f,
                                 new PointF(0.5f, 0.5f)));
             case Brightness:
                 return transform(
-                        new BrightnessFilterTransformation(mContext, 0.5f));
+                        new BrightnessFilterTransformation(context, 0.5f));
             case Kuawahara:
                 return transform(
-                        new KuwaharaFilterTransformation(mContext, 25));
+                        new KuwaharaFilterTransformation(context, 25));
             case Vignette:
                 return transform(
-                        new VignetteFilterTransformation(mContext,
+                        new VignetteFilterTransformation(context,
                                 new PointF(0.5f, 0.5f),
                                 new float[]{0.0f, 0.0f, 0.0f}, 0f, 0.75f));
             default:
