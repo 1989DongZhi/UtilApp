@@ -21,6 +21,16 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+
+    <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+    <uses-permission-sdk-23 android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission-sdk-23 android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission-sdk-23 android:name="android.permission.CAMERA" />
+
     <application
         android:name=".app.AppManager"
         android:allowBackup="true"
@@ -39,6 +49,8 @@
         <activity android:name=".ui.test.GlideLoadImageActivity" />
         <activity android:name=".ui.test.TestActivity" />
         <activity android:name=".ui.test.net.NetworkTestActivity" />
+        <activity android:name=".ui.media.MediaActivity" />
+        <activity android:name=".ui.media.PermissionsActivity" />
 
         <activity android:name=".ui.gnative.AndroidNativeActivity" />
         <activity

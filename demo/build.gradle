@@ -27,6 +27,15 @@ android {
     }
     productFlavors {
     }
+    dataBinding {
+        enabled true
+    }
+    sourceSets.main {
+        assets.srcDirs = ['assets']
+        jniLibs.srcDirs = ['libs']//指定jniLibs文件夹路径
+        jni.srcDirs = []//不编译jni
+
+    }
 }
 
 dependencies {

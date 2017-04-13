@@ -1,5 +1,6 @@
 package com.dong.utils;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -20,6 +21,10 @@ public class GadgetUtils {
         Date date = new Date(currentTime);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.getDefault());
         return sdf.format(date);
+    }
+
+    public static String getTime2Second(long time) {
+        return new DecimalFormat("#0.000").format(time / 1000.0) + "s";
     }
 
 }

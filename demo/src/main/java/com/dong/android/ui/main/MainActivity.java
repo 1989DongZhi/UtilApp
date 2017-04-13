@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.dong.android.ui.gnative.AndroidNativeActivity;
 import com.dong.android.ui.listsample.ListActivity;
 import com.dong.android.ui.listsample.SampleData;
+import com.dong.android.ui.media.MediaActivity;
 import com.dong.android.ui.test.GlideLoadImageActivity;
 import com.dong.android.ui.test.SVGTintActivity;
 import com.dong.android.ui.test.TestActivity;
@@ -50,6 +51,7 @@ public class MainActivity extends ListActivity {
         sampleData.add(new SampleData("SVG Tint", SVGTintActivity.class.getName()));
         sampleData.add(new SampleData("Test", TestActivity.class.getName()));
         sampleData.add(new SampleData("NetworkTestActivity", NetworkTestActivity.class.getName()));
+        sampleData.add(new SampleData("MediaActivity", MediaActivity.class.getName()));
         addTestData();
         return sampleData;
     }
