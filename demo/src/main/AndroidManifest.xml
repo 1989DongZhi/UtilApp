@@ -50,7 +50,6 @@
         <activity android:name=".ui.test.TestActivity" />
         <activity android:name=".ui.test.net.NetworkTestActivity" />
         <activity android:name=".ui.media.MediaActivity" />
-        <activity android:name=".ui.media.PermissionsActivity" />
 
         <activity android:name=".ui.gnative.AndroidNativeActivity" />
         <activity

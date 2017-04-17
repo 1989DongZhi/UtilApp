@@ -30,10 +30,6 @@ import java.util.regex.Pattern;
  * @time 2017/4/12 9:55
  */
 public class MediaActivity extends AppCompatActivity {
-    public static final int RESULT_CODE_FOR_RECORD_VIDEO_SUCCEED = 2;//视频录制成功
-    public static final int RESULT_CODE_FOR_RECORD_VIDEO_FAILED = 3;//视频录制出错
-    public static final int RESULT_CODE_FOR_RECORD_VIDEO_CANCEL = 4;//取消录制
-    public static final String INTENT_EXTRA_VIDEO_PATH = "intent_extra_video_path";//录制的视频路径
     //相机权限,录制音频权限,读写sd卡的权限,都为必须,缺一不可
     private static final String[] PERMISSIONS = new String[]{
             Manifest.permission.CAMERA,
@@ -124,12 +120,14 @@ public class MediaActivity extends AppCompatActivity {
             " -i " + currentInputVideoPath +
 //            " -tune zerolatency" +
             " -strict -2" +
-            " -vcodec libx264" +
-            " -acodec aac" +
+            " -c:v libx264" +
+            " -x264opts bitrate=300:vbv-maxrate=500" +
+            " -codec:a aac" +
             " -preset ultrafast" +
             " -ac 1" +
-            " -crf 28" +
             " -ar 44100" +
+            " -crf 28" +
+            " -r 18" +
             " -b:a 64k" +
             " -s 480x270" +
             " -aspect 16:9" +
@@ -142,13 +140,6 @@ public class MediaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_media);
-
-        mBinding.btnRecord.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                CameraActivity.startActivityForResult(MediaActivity.this, REQUEST_CODE_FOR_RECORD_VIDEO);
-            }
-        });
 
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(currentInputVideoPath);
@@ -192,7 +183,6 @@ public class MediaActivity extends AppCompatActivity {
 
         PermissionsChecker mChecker = new PermissionsChecker(getApplicationContext());
         if (mChecker.lacksPermissions(PERMISSIONS)) {
-            PermissionsActivity.startActivityForResult(this, REQUEST_CODE_FOR_PERMISSIONS, PERMISSIONS);
         }
 
     }
@@ -264,48 +254,7 @@ public class MediaActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_FOR_PERMISSIONS) {
-            //权限申请
-            if (PermissionsActivity.PERMISSIONS_DENIED == resultCode) {
-                //权限未被授予，退出应用
-                finish();
-            } else if (PermissionsActivity.PERMISSIONS_GRANTED == resultCode) {
-                //权限被授予
-                //do nothing
-            }
-        } else if (requestCode == REQUEST_CODE_FOR_RECORD_VIDEO) {
-            //录制视频
-            if (resultCode == RESULT_CODE_FOR_RECORD_VIDEO_SUCCEED) {
-                //录制成功
-                String videoPath = data.getStringExtra(INTENT_EXTRA_VIDEO_PATH);
-                if (!TextUtils.isEmpty(videoPath)) {
-                    currentInputVideoPath = videoPath;
-                    MediaMetadataRetriever retr = new MediaMetadataRetriever();
-                    retr.setDataSource(currentInputVideoPath);
-                    String time = retr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);//获取视频时长
-                    //7680
-                    try {
-                        videoLength = Double.parseDouble(time) / 1000.00;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        videoLength = 0.00;
-                    }
-                    Log.v(TAG, "videoLength = " + videoLength + "s");
-                    refreshCurrentPath();
-                }
-            } else if (resultCode == RESULT_CODE_FOR_RECORD_VIDEO_FAILED) {
-                //录制失败
-                currentInputVideoPath = "";
-            }
-        }
-
-    }
-
     private void refreshCurrentPath() {
-        mBinding.tvVideoFilePath.setText(getString(R.string.path, currentInputVideoPath, getFileSize(currentInputVideoPath)));
         cmd = "-y -i " + currentInputVideoPath + " -strict -2 -vcodec libx264 -preset ultrafast " +
                 "-crf 24 -acodec aac -ar 44100 -ac 2 -b:a 96k -s 480x320 -aspect 16:9 " + currentOutputVideoPath;
         mBinding.etCommand.setText(cmd);
