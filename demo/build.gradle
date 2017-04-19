@@ -27,20 +27,12 @@ android {
     }
     productFlavors {
     }
-    dataBinding {
-        enabled true
-    }
-    sourceSets.main {
-        assets.srcDirs = ['assets']
-        jniLibs.srcDirs = ['libs']//指定jniLibs文件夹路径
-        jni.srcDirs = []//不编译jni
-
-    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':utils')
+    compile project(':recycler')
     //glide
     compile 'com.github.bumptech.glide:glide:3.7.0'
     //推特提供的一个针对Glide特效动画库
@@ -61,6 +53,8 @@ dependencies {
     //Stetho use for debug
 //    compile 'com.facebook.stetho:stetho:1.4.2'
 //    compile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
+    //
+    compile 'com.writingminds:FFmpegAndroid:0.3.2'
     //
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'org.greenrobot:eventbus:3.0.0'

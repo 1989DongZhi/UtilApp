@@ -2,44 +2,52 @@ package com.dong.android.ui.media;
 
 import android.Manifest;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ScrollView;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.dong.android.R;
-import com.dong.android.databinding.ActivityMediaBinding;
-import com.dong.utils.GadgetUtils;
-import com.dong.utils.log.LogUtils;
+import com.dong.android.base.presenter.BasePresenter;
+import com.dong.android.base.view.BaseActivity;
+import com.dong.android.widget.MyProgressDialog;
+import com.dong.utils.UIUtils;
+import com.dong.utils.data.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * @author <dr_dong>
  * @time 2017/4/12 9:55
  */
-public class MediaActivity extends AppCompatActivity {
-    //相机权限,录制音频权限,读写sd卡的权限,都为必须,缺一不可
+public class MediaActivity extends BaseActivity {
+
+    public static final String TAG = MediaActivity.class.getSimpleName();
+    public static final int PERMISSIONS_REQUEST_CODE = 111;
+    public static final int CHOOSE_CODE = 222;
     private static final String[] PERMISSIONS = new String[]{
             Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE};
-    private static final int REQUEST_CODE_FOR_PERMISSIONS = 0;//
-    private static final int REQUEST_CODE_FOR_RECORD_VIDEO = 1;//录制视频请求码
-    private static final Handler handler = new Handler();
-    private final String TAG = getClass().getSimpleName();
     private final String[][] MIME_MapTable = {
             //{后缀名，MIME类型}
             {".3gp", "video/3gpp"},
@@ -109,156 +117,253 @@ public class MediaActivity extends AppCompatActivity {
             {".zip", "application/x-zip-compressed"},
             {"", "*/*"}
     };
-    ActivityMediaBinding mBinding;
+    @BindView(R.id.command0)
+    EditText command0;
+    @BindView(R.id.command1)
+    EditText command1;
+    private MyProgressDialog progressDialog;
     private Compressor mCompressor;
-    private String currentInputVideoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/media/aaa.mp4";
-    private String currentOutputVideoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/media/aaa_out007.mp4";
-    //    private String currentOutputVideoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/media/0_out2.mp4";
-    String cmd = "-y" +
-            " -threads:1 4" +
-            " -re" +
-            " -i " + currentInputVideoPath +
-//            " -tune zerolatency" +
-            " -strict -2" +
-            " -c:v libx264" +
+    private String cmd0 = "-y" +
+            " -i ";
+    private String cmd1 = " -threads:1 4" +
+//            " -vcodec libx264" +
+            " -vcodec mpeg4" +
             " -x264opts bitrate=300:vbv-maxrate=500" +
-            " -codec:a aac" +
             " -preset ultrafast" +
+            " -codec:a aac" +
             " -ac 1" +
             " -ar 44100" +
+            " -b:a 48000" +
+            " -b:v 150k" +
+            " -r 24" +
             " -crf 28" +
-            " -r 18" +
-            " -b:a 64k" +
-            " -s 480x270" +
+//            " -tbr 30" +
+//            " -tbn 90k" +
+//            " -tbc 180k" +
+//            " -g 25" +
             " -aspect 16:9" +
-            " " + currentOutputVideoPath;
+            " -s ";
     private Double videoLength = 0.00;//视频时长 s
     private long startTime;
     private long endTime;
+    private String fileO;
+    private String filePath;
+    private String fileNameIn;
+    private String fileNameOut;
+    private String fileCover;
+
+    @OnClick({R.id.btnRun})
+    public void onClick(View v) {
+        //防止快速点击
+        switch (v.getId()) {
+            case R.id.btnRun:
+                if (TextUtils.isEmpty(fileO)) {
+                    UIUtils.showToast("请选择文件");
+                    choose();
+                } else {
+                    execCommand(fileO);
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_media);
+    protected int getRootView() {
+        return R.layout.activity_media;
+    }
 
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        mmr.setDataSource(currentInputVideoPath);
-        for (int i = 0; i < 26; i++) {
-            LogUtils.e("===" + i + "===" + mmr.extractMetadata(i));
-        }
-        mBinding.etCommand.setText(cmd);
-        mBinding.btnRun.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String command = mBinding.etCommand.getText().toString();
-                if (TextUtils.isEmpty(command)) {
-                    Toast.makeText(MediaActivity.this, getString(R.string.compree_please_input_command)
-                            , Toast.LENGTH_SHORT).show();
-                } else if (TextUtils.isEmpty(currentInputVideoPath)) {
-                    Toast.makeText(MediaActivity.this, R.string.no_video_tips, Toast.LENGTH_SHORT).show();
-                } else {
-                    File file = new File(currentOutputVideoPath);
-                    if (file.exists()) {
-                        file.delete();
-                    }
-                    execCommand(command);
-                }
-            }
-        });
+    @Override
+    protected BasePresenter createPresenter() {
+        return null;
+    }
+
+    @Override
+    protected void setListener() {
+
+    }
+
+    @Override
+    protected void initData(Bundle savedInstanceState) {
+        command0.setText(cmd0);
+        command1.setText(cmd1);
+        checkPermission(PERMISSIONS);
         mCompressor = new Compressor(this);
         mCompressor.loadBinary(new InitListener() {
             @Override
             public void onLoadSuccess() {
-                Log.v(TAG, "load library succeed");
-                textAppend(getString(R.string.compress_load_library_succeed));
+                Log.d(TAG, "===ffmpeg load library succeed===" + getString(R.string.compress_load_library_succeed));
             }
 
             @Override
             public void onLoadFail(String reason) {
-                Log.i(TAG, "load library fail:" + reason);
-                textAppend(getString(R.string.compress_load_library_failed, reason));
+                Log.d(TAG, "load library fail:" + reason);
+                Log.d(TAG, "===ffmpeg load library fail===" + getString(R.string.compress_load_library_failed, reason));
             }
         });
-
-
-        PermissionsChecker mChecker = new PermissionsChecker(getApplicationContext());
-        if (mChecker.lacksPermissions(PERMISSIONS)) {
-        }
-
     }
 
-    private void execCommand(String cmd) {
-        File mFile = new File(currentOutputVideoPath);
+    private void checkPermission(String[] permissions) {
+        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED)
+                && (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED)
+                && (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
+                && (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)) {
+            //申请WRITE_EXTERNAL_STORAGE权限
+            ActivityCompat.requestPermissions(this, permissions, PERMISSIONS_REQUEST_CODE);
+        } else {
+            choose();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSIONS_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission Granted
+                UIUtils.showToast("相关权限获取成功！");
+                choose();
+            } else {
+                // Permission Denied
+                UIUtils.showToast("未获取相关权限！");
+                finish();
+            }
+        }
+    }
+
+    public void choose() {
+        Intent it = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        it.setDataAndType(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, "video/*");
+        startActivityForResult(it, CHOOSE_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CHOOSE_CODE) {
+            if (resultCode == RESULT_OK && data != null && data.getData() != null) {
+                Uri uri = data.getData();
+                String[] proj = {MediaStore.Images.Media.DATA, MediaStore.Images.Media.MIME_TYPE};
+                Cursor cursor = getContentResolver().query(uri, proj, null, null, null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    String _data = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+                    String mime_type = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.MIME_TYPE));
+                    if (!TextUtils.isEmpty(mime_type) && mime_type.contains("video") && !TextUtils.isEmpty(_data)) {
+                        fileO = _data;
+                    } else {
+                        UIUtils.showToast("视频获取失败");
+                    }
+                }
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        }
+    }
+
+    private void execCommand(String fileO) {
+        Log.d(TAG, "===fileO===" + fileO);
+        filePath = fileO.substring(0, fileO.lastIndexOf('/') + 1);
+        fileNameIn = fileO.substring(fileO.lastIndexOf('/') + 1);
+        fileNameOut = fileO.substring(fileO.lastIndexOf('/') + 1, fileO.lastIndexOf('.')) + "_out" +
+                fileO.substring(fileO.lastIndexOf('.'));
+        fileCover = fileO.substring(fileO.lastIndexOf('/') + 1, fileO.lastIndexOf('.')) + "_cover.jpeg";
+
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        String path = filePath + fileNameIn;
+        mmr.setDataSource(path);
+        int rotation = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
+        int widthO = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+        int heightO = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+        videoLength = Long.parseLong(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) * 0.001;
+        int width = 480;
+        int height = 480;
+        if (widthO > heightO) {
+            if (widthO > width) {
+                width = 480;
+                height = heightO * width / widthO;
+            } else {
+                width = widthO;
+                height = heightO;
+            }
+        } else {
+            if (heightO > height) {
+                height = 480;
+                width = widthO * height / heightO;
+            } else {
+                width = widthO;
+                height = heightO;
+            }
+        }
+        String w_h = width + "x" + height;
+        if (rotation == 90 || rotation == 270) {
+            w_h = height + "x" + width;
+        }
+        String temp = command0.getText().toString() + filePath + fileNameIn +
+                command1.getText().toString() + w_h + " " +
+                filePath + fileNameOut;
+
+        Log.e(TAG, "===ffmpeg cmd===" + temp);
+//        String[] cmd = temp.split(" ");
+        String[] cmd = new String[]{"-h", "full"};
+
+        File mFile = new File(filePath + fileNameOut);
         if (mFile.exists()) {
             mFile.delete();
         }
         startTime = System.currentTimeMillis();
+        progressDialog = new MyProgressDialog(this);
+        progressDialog.setTextInfo("0%");
+        progressDialog.show();
         mCompressor.execCommand(cmd, new CompressListener() {
             @Override
             public void onExecSuccess(String message) {
                 endTime = System.currentTimeMillis();
-                Log.i(TAG, "success " + message);
-                textAppend(getString(R.string.compress_succeed));
-                Toast.makeText(getApplicationContext(), R.string.compress_succeed, Toast.LENGTH_SHORT).show();
-                String result = getString(R.string.compress_result_input_output, currentInputVideoPath
-                        , getFileSize(currentInputVideoPath), currentOutputVideoPath, getFileSize(currentOutputVideoPath));
-                result = result + GadgetUtils.getTime2Second(endTime - startTime);
-                textAppend(result);
+                Log.d(TAG, "===ffmpeg压缩成功===" + message);
+                try {
+                    FileUtils.saveFile(message, filePath, "log.txt");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String result = getString(R.string.compress_result_input_output,
+                        filePath + fileNameIn,
+                        getFileSize(filePath + fileNameIn),
+                        filePath + fileNameOut,
+                        getFileSize(filePath + fileNameOut));
+                result = result + "---" + new DecimalFormat("#0.000").format((endTime - startTime) / 1000.0) + "s";
+                Log.e(TAG, "===ffmpeg out===" + result);
+                progressDialog.dismiss();
                 new AlertDialog.Builder(MediaActivity.this)
                         .setTitle(getString(R.string.compress_succeed))
                         .setMessage(result)
                         .setPositiveButton(getString(R.string.open_video), (dialog, which) -> {
-                            openFile(new File(currentOutputVideoPath));
+                            openFile(new File(filePath + fileNameOut));
                             dialog.dismiss();
                         })
                         .setNegativeButton(getString(R.string.cancel), (dialog, which) -> {
                             dialog.dismiss();
                         })
                         .show();
-
             }
 
             @Override
             public void onExecFail(String reason) {
-                Log.i(TAG, "fail " + reason);
-                textAppend(getString(R.string.compress_failed, reason));
-                new AlertDialog.Builder(MediaActivity.this)
-                        .setTitle(getString(R.string.compress_failed))
-                        .setMessage(getString(R.string.compress_failed))
-                        .setPositiveButton(getString(R.string.confirm), (dialog, which) -> {
-                            dialog.dismiss();
-                        })
-                        .show();
+                Log.e(TAG, "===ffmpeg===" + getString(R.string.compress_failed, reason));
+                progressDialog.dismiss();
+                UIUtils.showToast("压缩失败");
             }
 
             @Override
             public void onExecProgress(String message) {
-                Log.i(TAG, "progress " + message);
-                textAppend(getString(R.string.compress_progress, message));
-                Log.v(TAG, getString(R.string.compress_progress, getProgress(message)));
-
-
+                Log.d(TAG, getString(R.string.compress_progress, getProgress(message)));
+                progressDialog.setTextInfo(getString(R.string.compress_progress, getProgress(message)));
             }
         });
-    }
-
-    private void textAppend(String text) {
-        if (!TextUtils.isEmpty(text)) {
-            mBinding.tvLog.append(text + "\n");
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mBinding.scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-                }
-            });
-        }
-    }
-
-    private void refreshCurrentPath() {
-        cmd = "-y -i " + currentInputVideoPath + " -strict -2 -vcodec libx264 -preset ultrafast " +
-                "-crf 24 -acodec aac -ar 44100 -ac 2 -b:a 96k -s 480x320 -aspect 16:9 " + currentOutputVideoPath;
-        mBinding.etCommand.setText(cmd);
-        mBinding.tvLog.setText("");
     }
 
     private void openFile(File file) {
@@ -279,21 +384,6 @@ public class MediaActivity extends AppCompatActivity {
 
     }
 
-    private String getFileSize(String path) {
-        File f = new File(path);
-        if (!f.exists()) {
-            return "0 MB";
-        } else {
-            long size = f.length();
-            return (size / 1024f) / 1024f + "MB";
-        }
-    }
-
-    /**
-     * 根据文件后缀名获得对应的MIME类型。
-     *
-     * @param file
-     */
     private String getMIMEType(File file) {
 
         String type = "*/*";
@@ -315,7 +405,6 @@ public class MediaActivity extends AppCompatActivity {
     }
 
     private String getProgress(String source) {
-        //progress frame=   28 fps=0.0 q=24.0 size= 107kB time=00:00:00.91 bitrate= 956.4kbits/s
         Pattern p = Pattern.compile("00:\\d{2}:\\d{2}");
         Matcher m = p.matcher(source);
         if (m.find()) {
@@ -323,13 +412,23 @@ public class MediaActivity extends AppCompatActivity {
             String result = m.group(0);
             String temp[] = result.split(":");
             Double seconds = Double.parseDouble(temp[1]) * 60 + Double.parseDouble(temp[2]);
-            Log.v(TAG, "current second = " + seconds);
+            Log.d(TAG, "current second = " + seconds);
             if (0 != videoLength) {
-                return seconds / videoLength + "";
+                return new DecimalFormat("#0.0").format(seconds / videoLength * 100) + "%";
             }
             return "0";
         }
         return "";
+    }
+
+    private String getFileSize(String path) {
+        File f = new File(path);
+        if (!f.exists()) {
+            return "0 MB";
+        } else {
+            long size = f.length();
+            return (size / 1024f) / 1024f + "MB";
+        }
     }
 
 }
