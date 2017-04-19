@@ -49,7 +49,7 @@ public class Compressor {
         }
     }
 
-    public void execCommand(String cmd, final CompressListener mListener) {
+    public void execCommand(String[] cmd, final CompressListener mListener) {
         try {
             ffmpeg.execute(cmd, new ExecuteBinaryResponseHandler() {
 
