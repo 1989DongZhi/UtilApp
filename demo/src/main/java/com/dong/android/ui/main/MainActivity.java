@@ -10,6 +10,7 @@ import com.dong.android.ui.media.MediaActivity;
 import com.dong.android.ui.test.GlideLoadImageActivity;
 import com.dong.android.ui.test.SVGTintActivity;
 import com.dong.android.ui.test.TestActivity;
+import com.dong.android.ui.test.TestRecyclerActivity;
 import com.dong.android.ui.test.net.NetworkTestActivity;
 import com.dong.android.utils.eventbus.EventUtils;
 import com.dong.utils.log.LogUtils;
@@ -52,6 +53,7 @@ public class MainActivity extends ListActivity {
         sampleData.add(new SampleData("Test", TestActivity.class.getName()));
         sampleData.add(new SampleData("NetworkTestActivity", NetworkTestActivity.class.getName()));
         sampleData.add(new SampleData("MediaActivity", MediaActivity.class.getName()));
+        sampleData.add(new SampleData("TestRecyclerActivity", TestRecyclerActivity.class.getName()));
         addTestData();
         return sampleData;
     }
