@@ -31,7 +31,7 @@ public class GlideLoadImageActivity extends BaseActivity {
 
     @Override
     protected int getRootView() {
-        return R.layout.activity_main;
+        return R.layout.activity_glide_load_image;
     }
 
     @Override

@@ -3,13 +3,15 @@ package com.dong.recycler.manage;
 import android.support.annotation.LayoutRes;
 import android.util.SparseIntArray;
 
+import com.dong.recycler.ItemTypeEntity;
+
 import java.util.List;
 
 /**
  * @author <dr_dong>
  * @time 2017/4/10 15:25
  */
-public abstract class ItemTypeManage<T> {
+public abstract class ItemTypeManage<T extends ItemTypeEntity> {
     private static final int DEFAULT_VIEW_TYPE = -0xff;
     private SparseIntArray layouts;
     private boolean autoMode, selfMode;
