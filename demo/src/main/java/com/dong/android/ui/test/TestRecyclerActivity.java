@@ -1,21 +1,26 @@
 package com.dong.android.ui.test;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 
 import com.dong.android.R;
 import com.dong.android.base.presenter.BasePresenter;
 import com.dong.android.base.view.BaseActivity;
+import com.dong.android.widget.SwipeRefreshView;
 import com.dong.recycler.BaseViewHolder;
 import com.dong.recycler.CommonRecyclerAdapter;
 import com.dong.recycler.ItemTypeEntity;
 import com.dong.recycler.manage.ItemTypeManage;
+import com.dong.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindArray;
 import butterknife.BindView;
 
 /**
@@ -24,9 +29,15 @@ import butterknife.BindView;
  */
 public class TestRecyclerActivity extends BaseActivity {
 
-    @BindView(R.id.test_list)
-    RecyclerView recyclerView;
+    public static final String TAG = TestRecyclerActivity.class.getSimpleName();
 
+    @BindView(R.id.test_srl)
+    SwipeRefreshView swipeRefreshView;
+    @BindArray(R.array.loading_colors)
+    int[] loadingColors;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView recyclerView;
     private ItemTypeManage itemTypeManage;
     private List<TestData> dataList;
     private TestAdapter adapter;
@@ -43,12 +54,34 @@ public class TestRecyclerActivity extends BaseActivity {
 
     @Override
     protected void setListener() {
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            //TODO refresh data
+            UIUtils.showToast("refresh data");
+            new Handler().postDelayed(() -> {
+                swipeRefreshLayout.setRefreshing(false);
+            }, 2000);
+
+        });
+        swipeRefreshView.setOnLoadListener(() -> {
+            UIUtils.showToast("load more data");
+            new Handler().postDelayed(() -> {
+                for (int i = 100; i < 120; i++) {
+                    dataList.add(new TestData(10000 * i, "title ==== " + i, "src ==== " + i, "name === " + i, i));
+                }
+                adapter.notifyDataSetChanged();
+                swipeRefreshView.setLoadingClose();
+            }, 2000);
+        });
 
     }
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+        swipeRefreshLayout = swipeRefreshView.getRefreshLayout();
+        swipeRefreshLayout.setColorSchemeColors(loadingColors);
+        swipeRefreshView.setEnabled(true);
+        recyclerView = swipeRefreshView.getRecyclerView();
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
 
         itemTypeManage = new ItemTypeManage<TestData>() {
             @Override
