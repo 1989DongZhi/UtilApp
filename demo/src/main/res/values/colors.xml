@@ -348,4 +348,8 @@
 
     <color name="black_overlay">#66000000</color>
 
+    <array name="color_list">
+
+    </array>
+
 </resources>
