@@ -65,10 +65,10 @@ public class TestRecyclerActivity extends BaseActivity {
         swipeRefreshView.setOnLoadListener(() -> {
 //            UIUtils.showToast("load more data");
             new Handler().postDelayed(() -> {
-                for (int i = 100; i < 120; i++) {
-                    dataList.add(new TestData(10000 * i, "title ==== " + i, "src ==== " + i, "name === " + i, i));
-                }
-                adapter.notifyDataSetChanged();
+//                for (int i = 100; i < 120; i++) {
+//                    dataList.add(new TestData(10000 * i, "title ==== " + i, "src ==== " + i, "name === " + i, i));
+//                }
+//                adapter.notifyDataSetChanged();
                 swipeRefreshView.setLoadingClose();
             }, 2000);
         });
