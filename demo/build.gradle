@@ -3,7 +3,7 @@ apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '25.0.3'
     defaultConfig {
         applicationId "com.dong.android"
         minSdkVersion 21
@@ -51,8 +51,8 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     //Stetho use for debug
-//    compile 'com.facebook.stetho:stetho:1.4.2'
-//    compile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
+    //    compile 'com.facebook.stetho:stetho:1.4.2'
+    //    compile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
     //
     compile 'com.writingminds:FFmpegAndroid:0.3.2'
     //
