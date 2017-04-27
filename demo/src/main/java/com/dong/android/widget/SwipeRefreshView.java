@@ -3,7 +3,6 @@ package com.dong.android.widget;
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,6 +32,7 @@ public class SwipeRefreshView extends RelativeLayout {
      */
     private boolean isLoading = false;
     private boolean showLoadMore = false;
+    private int downY = 0;
 
     public SwipeRefreshView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -51,11 +51,11 @@ public class SwipeRefreshView extends RelativeLayout {
         setRecyclerViewOnScroll();
 
         mFooterView = (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.swipe_refresh_load_more, this, false);
-        mFooterView.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT, UIUtils.dip2px(48)));
+        mFooterView.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT, UIUtils.dip2px(160)));
 
         // 表示控件移动的最小距离，手移动的距离大于这个距离才能拖动控件
         mScaledTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        LogUtils.e("===", "====" + mScaledTouchSlop);
+        LogUtils.e("===", "===mScaledTouchSlop===" + mScaledTouchSlop);
     }
 
     public SwipeRefreshLayout getRefreshLayout() {
@@ -67,38 +67,30 @@ public class SwipeRefreshView extends RelativeLayout {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean dispatchTouchEvent(MotionEvent event) {
         if (showLoadMore) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_MOVE:
-                    int dy = (int) event.getY();
-                    LogUtils.e("===", "===dy===" + dy);
-                    if (dy <= mFooterView.getLayoutParams().height) {
-                        mRecyclerView.setPadding(0, 0, 0, dy);
-                        mRecyclerView.smoothScrollBy(0, dy);
-                        mFooterView.setTranslationY(mFooterView.getLayoutParams().height - dy);
+                    LogUtils.e("===", "===ACTION_MOVE===" + downY);
+                    LogUtils.e("===", "===ACTION_MOVE2===" + downY);
+                    LogUtils.e("===", "===height===" + mFooterView.getLayoutParams().height);
+                    if (downY <= mFooterView.getLayoutParams().height) {
+                        mRecyclerView.setPadding(0, 0, 0, downY);
+                        mRecyclerView.smoothScrollBy(0, downY);
+                        mFooterView.setTranslationY(mFooterView.getLayoutParams().height - downY);
                     }
-
                     break;
                 case MotionEvent.ACTION_UP:
-                    showLoadMore = false;
-                    LogUtils.e("===", "===up_y===" + mFooterView.getTranslationY());
-                    if (mFooterView.getTranslationY() == 0.0f) {
-                        mRecyclerView.setPadding(0, 0, 0, mFooterView.getLayoutParams().height);
-                        mRecyclerView.smoothScrollBy(0, mFooterView.getLayoutParams().height);
-                        mRecyclerView.setScrollY(mFooterView.getLayoutParams().height);
-                        if (mOnLoadListener != null) {
-                            mOnLoadListener.onLoad();
-                        }
+                    if (showLoadMore && mFooterView.getTranslationY() == 0) {
+                        loadData();
+                        showLoadMore = false;
                     } else {
-                        mRecyclerView.setPadding(0, 0, 0, 0);
-                        mRecyclerView.smoothScrollBy(0, 0);
-                        mRecyclerView.setScrollY(0);
+                        setLoadingClose();
                     }
                     break;
             }
         }
-        return super.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
     /**
@@ -106,68 +98,58 @@ public class SwipeRefreshView extends RelativeLayout {
      */
     private void loadData() {
         isLoading = true;
-        removeView(mFooterView);
-        LayoutParams layoutParams = (LayoutParams) mFooterView.getLayoutParams();
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        addView(mFooterView, layoutParams);
-        LogUtils.e("===", "===" + mFooterView.getLayoutParams().height);
-//        mRecyclerView.setPadding(0, 0, 0, mFooterView.getLayoutParams().height);
-//        mRecyclerView.smoothScrollBy(0,mFooterView.getLayoutParams().height);
-//        mRecyclerView.setScrollY(mFooterView.getLayoutParams().height);
         LogUtils.e("===", "加载数据...");
-//        if (mOnLoadListener != null) {
-//            mOnLoadListener.onLoad();
-//        }
+        if (mOnLoadListener != null) {
+            mOnLoadListener.onLoad();
+        }
     }
 
     public void setLoadingClose() {
-        isLoading = false;
-        removeView(mFooterView);
-        mRecyclerView.setPadding(0, 0, 0, 0);
+        if (isLoading) {
+            LogUtils.e("===", "===setLoadingClose===");
+            isLoading = false;
+            removeView(mFooterView);
+            mRecyclerView.setPadding(0, 0, 0, 0);
+        }
     }
 
     /**
      * 设置RecyclerView的滑动监听
      */
     private void setRecyclerViewOnScroll() {
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             //用来标记是否正在向最后一个滑动，既是否向下滑动
             boolean isSlidingToLast = false;
 
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                StaggeredGridLayoutManager manager = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
-                // 当不滚动时
-//                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    //获取最后一个完全显示的ItemPosition
-                    int[] lastVisiblePositions = manager.findLastVisibleItemPositions(new int[manager.getSpanCount()]);
-                    int lastVisiblePos = getMaxElem(lastVisiblePositions);
-                    int totalItemCount = manager.getItemCount();
-
-                    // 判断是否滚动到底部
-                    if (lastVisiblePos == (totalItemCount - 1) && isSlidingToLast && !isLoading) {
-                        //加载更多功能的代码
-                        LogUtils.e("===", "加载更多");
-                        showLoadMore = true;
-                        loadData();
-                    }
-//                }
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                //dx用来判断横向滑动方向，dy用来判断纵向滑动方向
-                if (dy > 0) {
-                    //大于0表示，正在向下滚动
-                    isSlidingToLast = true;
-                } else {
-                    //小于等于0 表示停止或向上滚动
-                    isSlidingToLast = false;
+                LogUtils.e("===", "===onScrolled===dy===" + dy);
+                if (!recyclerView.canScrollVertically(1) && !showLoadMore) {
+                    showLoadMore();
                 }
-
+                if (showLoadMore) {
+                    downY += dy;
+                    if (downY > UIUtils.dip2px(160)) {
+                        downY = UIUtils.dip2px(160);
+                    }
+                }
+                super.onScrolled(recyclerView, dx, dy);
             }
         });
+    }
+
+    private void showLoadMore() {
+        downY = 0;
+        showLoadMore = true;
+        removeView(mFooterView);
+        LayoutParams layoutParams = (LayoutParams) mFooterView.getLayoutParams();
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        addView(mFooterView, layoutParams);
+        mFooterView.setTranslationY(mFooterView.getLayoutParams().height);
     }
 
     private int getMaxElem(int[] arr) {
